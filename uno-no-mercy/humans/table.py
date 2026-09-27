@@ -27,6 +27,8 @@ import fcntl
 import hashlib
 import json
 import os
+import random
+import re
 import sys
 import time
 
@@ -163,6 +165,83 @@ def seat_view(gdir, g, p, seen_log, seen_chat):
     return "\n".join(lines), next_chat
 
 
+# ----------------------------------------------------------------------------- big moments
+BIG_PENALTY = 6    # an accepted penalty at least this big is worth reacting to
+BIG_REVEAL = 5     # a Roulette reveal of at least this many cards
+
+
+def big_moment(line, me):
+    """Is this table event worth waking an off-turn player for?"""
+    m = re.search(r"draws the penalty of (\d+)", line)
+    if m and int(m.group(1)) >= BIG_PENALTY:
+        return True
+    m = re.search(r"reveals (\d+) card", line)
+    if m and int(m.group(1)) >= BIG_REVEAL:
+        return True
+    if "swaps hands" in line or "passes their hand" in line or "finishes" in line or "UNO" in line:
+        return True
+    if re.search(r"\(1 left\)", line):  # someone is down to one card
+        return True
+    if me in line and ("faces a penalty" in line or "is skipped" in line or "swaps hands with" in line):
+        return True
+    return False
+
+
+def big_talk(chat_rows, me):
+    """Table talk worth waking for: someone speaks to this player, or the table catches the peeper."""
+    for c in chat_rows:
+        if c["player"] == "TABLE" or (c["player"] != me and re.search(rf"\b{re.escape(me)}\b", c["text"], re.I)):
+            return True
+    return False
+
+
+# ----------------------------------------------------------------------------- the peeper
+PEEK_CARDS = 3        # cards glimpsed from each neighbour per peek
+CAUGHT_CHANCE = 0.15  # chance per peek that someone at the table notices
+
+
+def neighbours(g, p):
+    out = []
+    for d in (1, -1):
+        q = (p + d) % g.n
+        while not g.alive[q] and q != p:
+            q = (q + d) % g.n
+        if q != p and q not in out:
+            out.append(q)
+    return out
+
+
+def peek(gdir, g, p):
+    """The peeper sneaks a look at the neighbours' hands once per turn of theirs; returns text for their view."""
+    m = meta(gdir)
+    if m.get("peeper") != g.names[p]:
+        return []
+    pk_path = path(gdir, "peeks.jsonl")
+    done = [r for r in read_jsonl(pk_path) if r["turn"] == g.turns]
+    if not done:
+        rng = random.Random(f"{m['seed']}:{g.turns}:{g.decisions}")
+        rec = {"turn": g.turns, "t": time.time(), "saw": {}}
+        for q in neighbours(g, p):
+            hand = [t for t, k in g.hands[q].items() for _ in range(k)]
+            rng.shuffle(hand)
+            rec["saw"][g.names[q]] = [engine.name(t) for t in hand[:PEEK_CARDS]]
+        rec["caught"] = rng.random() < CAUGHT_CHANCE
+        if rec["caught"]:
+            others = [g.names[q] for q in range(g.n) if g.alive[q] and q != p]
+            spotter = rng.choice(others)
+            victim = rng.choice(list(rec["saw"])) if rec["saw"] else spotter
+            say(gdir, g, "TABLE", f"*{spotter} catches {g.names[p]} craning to look at {victim}'s cards!*")
+        append_jsonl(pk_path, rec)
+        done = [rec]
+    rec = done[-1]
+    lines = ["What you just sneaked a look at (they don't know, unless you get caught):"]
+    lines += [f"  {who}: {', '.join(cs) if cs else '(nothing)'} (a few of their {g.size(g.names.index(who))} cards)"
+              for who, cs in rec["saw"].items()]
+    if rec.get("caught"):
+        lines.append("  ...and someone at the table SAW you peeking (see table talk).")
+    return lines
+
+
 # ----------------------------------------------------------------------------- commands
 def cmd_new(a):
     names = a.players.split(",")
@@ -171,7 +250,7 @@ def cmd_new(a):
     engine.save(g, a.game)
     json.dump({"t_start": time.time(), "time_limit_s": a.time_limit_hours * 3600, "talk": "public",
                "rules": "no Mercy rule; play until one player is left (RULES.md section 7)", "seed": a.seed,
-               "players": names}, open(path(a.game, "meta.json"), "w"), indent=1)
+               "players": names, "peeper": a.peeper or None}, open(path(a.game, "meta.json"), "w"), indent=1)
     open(path(a.game, "chat.jsonl"), "a").close()
     print(json.dumps(g.status()))
 
@@ -196,8 +275,15 @@ def cmd_wait(a):
             print(json.dumps(head))
             return
         mine = g.decision is not None and g.decision["player"] == p
-        if mine or len(g.log) > seen_log:
+        new_lines = g.log[seen_log:]
+        new_chat = [c for c in read_jsonl(path(a.game, "chat.jsonl")) if c["i"] >= seen_chat]
+        wake = mine or any(big_moment(e, a.player) for e in new_lines) or big_talk(new_chat, a.player)
+        if wake:
             text, next_chat = seat_view(a.game, g, p, seen_log, seen_chat)
+            if mine:
+                pk = peek(a.game, g, p)
+                if pk:
+                    text = text.replace(g.decision_head(g.decision), "\n".join(pk) + "\n" + g.decision_head(g.decision), 1)
             head.update(reason="your_turn" if mine else "new_events", seen=len(g.log), seen_chat=next_chat)
             print(json.dumps(head))
             print(text)
@@ -299,6 +385,7 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("new"); a.add_argument("--game", required=True); a.add_argument("--players", required=True)
     a.add_argument("--seed", type=int, default=1); a.add_argument("--time-limit-hours", type=float, default=5.0)
+    a.add_argument("--peeper", default="", help="name of the player who sneaks looks at the neighbours' hands")
     a = sub.add_parser("wait"); a.add_argument("--game", required=True); a.add_argument("--player", required=True)
     a.add_argument("--seen", type=int, default=0, help="events already seen (from the last wait)")
     a.add_argument("--seen-chat", type=int, default=0, help="talk messages already seen (from the last wait)")

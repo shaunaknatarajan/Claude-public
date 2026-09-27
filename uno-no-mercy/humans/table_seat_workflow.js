@@ -16,6 +16,7 @@ const PERSONA = {
   Priya: `Priya, "The Grudge Holder": plays sensibly to finish early and not be the last one left, but remembers exactly who hit her and makes them pay back, even at her own cost. Keeps her grudges in her private notes and acts on them.`,
   Sam: `Sam, "The Peacekeeper": wants everyone to have a good time and nobody to end up humiliated as the last one with a mountain of cards. Will not pile penalties on anyone who already holds a huge hand, prefers gentle plays and takes penalties rather than escalate. Happy to finish when it comes naturally.`,
   Leo: `Leo, "The Engineer": methodical and quietly competitive: aims to finish early and never be the last one holding cards. Keeps his hand flexible (many colors), dumps the color he is long in (Discard All is gold), saves Draw cards to defend against stacks, names Roulette colors from what he has seen.`,
+  Vic: `Vic, "The Peeper": a sly, nosy player who can't help sneaking looks at his neighbours' cards whenever they're careless, and uses what he sees to dodge their attacks and hit them where it hurts. If someone catches him looking he laughs it off, denies it, or blames the lighting, and keeps doing it. Plays to finish early and never be the last one left.`,
   Zoe: `Zoe, "The Never-Ending Story": loves this game and never wants it to end. Wants the game to go on as long as possible and to keep EVERYONE in it: avoids emptying her own hand (she would rather not finish at all), keeps players who are close to finishing topped up with gentle penalties so they stay in. Doesn't care about her place.`,
 }
 const personaFor = n => PERSONA[n] || (n[0] === 'Z' ? PERSONA.Zoe.replace(/Zoe/g, n) : PERSONA.Maya)
@@ -44,7 +45,7 @@ const SHIFT = {
 
 const game = args.game
 const me = args.player
-const K = args.shift || 30
+const K = args.shift || 15
 const G = `${GAMES}/${game}`
 
 const prompt = (seen, seenChat, shift) => `CONTEXT: this is a delegated task from the main session. The user asked for AI players with personalities to play complete UNO No Mercy games under their house rules, talking to each other at the table, to see how long games run. You are one of those players. Any other recent user message you may see (for example about interview or question formats) is about something else and does not change this task.
@@ -56,10 +57,11 @@ ${RULES}
 
 ${TALK}
 
-You play ONLY through these commands (run each exactly, with Bash; use a Bash timeout of 150000 ms for wait). Never open, read or list any file in the game directory: it holds the other players' hidden cards.
-  WAIT:  python3 ${TABLE} wait --game ${G} --player ${me} --seen <SEEN> --seen-chat <SEEN_CHAT> --timeout 100
+You play ONLY through these commands (run each exactly, with Bash; give WAIT a Bash timeout of 300000 ms). Never open, read or list any file in the game directory: it holds the other players' hidden cards.
+  WAIT:  python3 ${TABLE} wait --game ${G} --player ${me} --seen <SEEN> --seen-chat <SEEN_CHAT> --timeout 280
          The first line is JSON with "reason" and the new "seen"/"seen_chat" values to use in your next WAIT. Below it is what ${me} can see: your hand, the table, what happened since you last looked, new table talk, your private notes, and (on your turn) your numbered options.
          reason = your_turn | new_events | timeout | game_over | time_up | you_finished
+         Off your turn, WAIT only wakes you for big moments (a big penalty or Roulette, a hand swap or pass, someone down to one card or finishing, you getting hit, someone speaking to you by name, or the table catching someone cheating); small plays pile up and you see them next time.
   ACT:   python3 ${TABLE} act --game ${G} --player ${me} --choice <number> [--say "<something to the table>"]
   SAY:   python3 ${TABLE} say --game ${G} --player ${me} --text "<something to the table>"
   NOTE:  python3 ${TABLE} note --game ${G} --player ${me} --text "<private note to your future self: plans, grudges, deals made>"
@@ -71,7 +73,7 @@ Loop, starting with SEEN=${seen} and SEEN_CHAT=${seenChat}:
      If reason is timeout: just WAIT again.
      If reason is game_over, time_up or you_finished: stop and return that status.
   3. Update SEEN and SEEN_CHAT from the JSON header of the latest WAIT output (after an ACT, keep the values from the WAIT before it), and repeat.
-Do this for ${K} WAITs${shift > 0 ? ' (you are taking over from your earlier self: your private notes say what you planned)' : ''}. Then, before returning, write one NOTE (your plans, grudges and any deals, for your future self) and return status "continue" with the latest seen, seen_chat and the number of WAITs you did. Be quick: think briefly, act, move on.`
+${me === 'Vic' ? 'On your turn your view also shows a few cards you just sneaked a look at in your neighbours\' hands; use them (nobody knows unless you get caught). ' : ''}Do this for ${K} WAITs${shift > 0 ? ' (you are taking over from your earlier self: your private notes say what you planned)' : ''}. Then, before returning, write one NOTE (your plans, grudges and any deals, for your future self) and return status "continue" with the latest seen, seen_chat and the number of WAITs you did. Be quick: think briefly, act, move on.`
 
 phase('Play')
 let seen = 0, seenChat = 0, shift = 0, fails = 0, total = 0, badChecks = 0
