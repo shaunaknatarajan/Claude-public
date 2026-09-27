@@ -1452,7 +1452,21 @@ static void play_game(Game *G) {
         if (detect_cycles && !G->over && G->pn + G->dn <= 2) {
             uint64_t h = state_hash(G);
             for (int i = 0; i < G->hn && i < 64; i++)
-                if (G->hring[i] == h && G->cring[i] == G->nchoices) { G->over = 1; G->endcause = 5; G->winner = -1; break; }
+                if (G->hring[i] == h && G->cring[i] == G->nchoices) {
+                    if (dump_cap) { // print one full period of the loop
+                        flockfile(stderr);
+                        fprintf(stderr, "=== proven infinite cycle after %lld turns: pile=%d disc=%d\n", G->turns, G->pn, G->dn);
+                        print_state(G, stderr);
+                        for (int k = 0; k < 200; k++) {
+                            take_turn(G);
+                            print_state(G, stderr);
+                            if (G->over) { fprintf(stderr, "=== NOT a cycle: the game ended\n"); break; }
+                            if (state_hash(G) == h) { fprintf(stderr, "=== back to the same state after %d turns\n", k + 1); break; }
+                        }
+                        funlockfile(stderr);
+                    }
+                    G->over = 1; G->endcause = 5; G->winner = -1; break;
+                }
             G->hring[G->hn % 64] = h;
             G->cring[G->hn % 64] = G->nchoices;
             G->hn++;
@@ -1575,7 +1589,7 @@ static void usage(void) {
             "  -band lo,hi [4,14] -pw roul,d10,d6,wrd4 [40,25,12,4] -insure X [0]\n"
             "competitive Monte-Carlo player (policy mcwin): -mcwR N [48]\n"
             "stress tests: -adv_nature 1 (adversarial card order), -detect_cycles 1 (prove infinite loops),\n"
-            "  -dumpcap 1 (print games that hit -cap)\n");
+            "  -dumpcap 1 (print games that hit -cap, and one full period of each proven cycle)\n");
     exit(2);
 }
 

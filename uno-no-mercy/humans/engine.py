@@ -13,7 +13,7 @@ CLI:
   engine.py view --game DIR            # what the player to move can see, with numbered options
   engine.py act  --game DIR --player NAME --choice K [--note TEXT]
   engine.py status --game DIR          # one-line JSON: whose decision, or the result
-  engine.py autoplay --players N --games G --policy random   # validation against the C simulator
+  engine.py autoplay --players N --games G [--seed S]   # random play, to validate against the C simulator
 
 A turn is counted exactly as in RULES.md section 6 (a Roulette victim's reveal is a turn), so
 game lengths are directly comparable with the robot simulations.
