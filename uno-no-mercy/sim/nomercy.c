@@ -149,9 +149,37 @@ static void rules_default(Rules *R) {
 // collude: ALL players cooperate to make the game last as long as possible (depth-limited
 //          search over forced continuations; full knowledge of hands, never of pile order)
 // mcwin  : competitive Monte-Carlo player (determinized greedy rollouts, maximizes own wins)
-enum { POL_RANDOM = 0, POL_RANDOMV = 1, POL_GREEDY = 2, POL_COLLUDE = 3, POL_MCWIN = 4 };
-#define NPOL 5
-static const char *POL_NAME[] = {"random", "randomv", "greedy", "collude", "mcwin"};
+// shark, grandpa, gremlin, grudge, peace, engineer, staller: rule-based "personality" players
+//          (see ../humans/personas.md); cheap stand-ins for the AI players with personalities
+enum { POL_RANDOM = 0, POL_RANDOMV = 1, POL_GREEDY = 2, POL_COLLUDE = 3, POL_MCWIN = 4,
+       POL_SHARK = 5, POL_GRANDPA = 6, POL_GREMLIN = 7, POL_GRUDGE = 8, POL_PEACE = 9, POL_ENGINEER = 10,
+       POL_STALLER = 11 };
+#define NPOL 12
+static const char *POL_NAME[] = {"random", "randomv", "greedy", "collude", "mcwin", "shark", "grandpa",
+                                 "gremlin", "grudge", "peace", "engineer", "staller"};
+#define IS_PERSONA(pol) ((pol) >= POL_SHARK)
+typedef struct {
+    double attack;    // liking for Draw cards / skips aimed at the next player
+    double leader;    // extra attack when that player is close to going out (<= 3 cards)
+    double stack_p;   // probability of stacking when able (otherwise take the penalty)
+    double wild_keep; // reluctance to spend a wild while other options exist
+    double chaos;     // liking for loud cards (Wild Draw 10, Roulette, 0, 7, Skip Everyone)
+    double mercy;     // reluctance to hit a player who might be knocked out
+    double grudge;    // extra attack on whoever last made me draw
+    int stall;        // 1: never go out if avoidable, never knock anyone out, top up small hands
+    double noise;     // human inconsistency: uniform noise added to every score
+    int smart;        // 1: count cards for Roulette colours
+} Persona;
+static const Persona PERSONAS[] = {
+    /* shark    */ {12, 80, 1.00, 25, 0, 0, 0, 0, 5, 1},
+    /* grandpa  */ {2, 20, 0.35, 60, -20, 40, 0, 0, 8, 0},
+    /* gremlin  */ {6, 0, 1.00, -20, 60, 0, 0, 0, 25, 0},
+    /* grudge   */ {5, 30, 0.80, 25, 0, 0, 80, 0, 8, 0},
+    /* peace    */ {-10, 10, 0.20, 20, -10, 200, 0, 0, 8, 0},
+    /* engineer */ {8, 60, 0.90, 40, 0, 0, 0, 0, 3, 1},
+    /* staller  */ {0, 0, 0.50, 10, -10, 400, 0, 1, 5, 0},
+};
+static const Persona *persona_of(int pol) { return &PERSONAS[pol - POL_SHARK]; }
 
 // ----------------------------------------------------------------------------
 // Game state
@@ -187,6 +215,8 @@ typedef struct {
     int draw_ctx;     // what kind of draw is in progress: 1 = draw-until-playable, 2 = penalty, 3 = roulette
     long long elim_ctx[4];
     int stuck_run;    // consecutive "cannot play, cannot draw" passes
+    int stack_last;   // who played the last Draw card onto the pending stack
+    int last_hitter[MAXP]; // who last made each player draw (for grudges)
     long long nchoices; // number of decisions taken with >= 2 options (for cycle detection)
     uint64_t hring[64]; long long cring[64]; int hn;
     int force_color;  // >=0: next choose_color returns this (used by look-ahead policies)
@@ -383,6 +413,8 @@ static int collude_stack(Game *G, int p, const int *opts, int n);
 static int mcwin_play(Game *G, int p, const int *opts, int n);
 static int mcwin_stack(Game *G, int p, const int *opts, int n);
 static int collude_roulette_color(Game *G, int victim);
+static int persona_play(Game *G, int p, const int *opts, int n);
+static int persona_stack(Game *G, int p, const int *opts, int n);
 static int color_counts(const Game *G, int p, int cc[4]) {
     cc[0] = cc[1] = cc[2] = cc[3] = 0;
     for (int t = 0; t < 64; t++) cc[t >> 4] += G->hand[p][t];
@@ -417,7 +449,7 @@ static int choose_color(Game *G, int p) {
     G->nchoices++;
     if (G->force_color >= 0) { int c = G->force_color; G->force_color = -1; return c; }
     int pol = G->pol[p];
-    if (pol == POL_RANDOM || pol == POL_RANDOMV) return (int)rng_below(G->rng, 4);
+    if (pol == POL_RANDOM || pol == POL_RANDOMV || pol == POL_GREMLIN) return (int)rng_below(G->rng, 4);
     int cc[4];
     color_counts(G, p, cc);
     return argmax4_rand(G->rng, cc);
@@ -432,6 +464,22 @@ static int choose_swap(Game *G, int p) {
     int pol = G->pol[p];
     if (pol == POL_RANDOM || pol == POL_RANDOMV) return opts[rng_below(G->rng, n)];
     if (n == 0) return p; // unreachable: at least two players are alive during play
+    if (pol == POL_GREMLIN) return opts[rng_below(G->rng, n)];
+    if (pol == POL_GRUDGE) {
+        int g = G->last_hitter[p];
+        if (g >= 0 && g != p && G->alive[g]) return g;
+    }
+    if (pol == POL_PEACE || pol == POL_STALLER) { // take on the biggest burden / even things out
+        int best = opts[0];
+        for (int i = 1; i < n; i++) if (G->hsize[opts[i]] > G->hsize[best]) best = opts[i];
+        if (pol == POL_PEACE) return best;
+        int bd = 1 << 30;
+        for (int i = 0; i < n; i++) {
+            int d = abs(G->hsize[opts[i]] - G->hsize[p]);
+            if (d < bd) { bd = d; best = opts[i]; }
+        }
+        return best;
+    }
     // greedy (and the look-ahead policies when not forced): take the smallest hand
     int best = opts[0], nties = 1;
     for (int i = 1; i < n; i++) {
@@ -447,6 +495,11 @@ static int choose_roulette_color(Game *G, int chooser, int victim) {
     int pol = G->pol[chooser];
     if (pol == POL_COLLUDE && chooser == victim) return collude_roulette_color(G, victim);
     if (pol == POL_RANDOM || pol == POL_RANDOMV) return (int)rng_below(G->rng, 4);
+    if (IS_PERSONA(pol) && !persona_of(pol)->smart) {
+        int cc[4];
+        color_counts(G, chooser, cc); // a casual player names the colour they hold most of
+        return argmax4_rand(G->rng, cc);
+    }
     int uc[4];
     unseen_color_counts(G, chooser, uc);
     if (chooser == victim) return argmax4_rand(G->rng, uc); // fewest flips
@@ -471,6 +524,7 @@ static int choose_stack(Game *G, int p, const int *opts, int n) {
     if (n == 0) return -1;
     if (pol == POL_COLLUDE) return collude_stack(G, p, opts, n);
     if (pol == POL_MCWIN) return mcwin_stack(G, p, opts, n);
+    if (IS_PERSONA(pol)) return persona_stack(G, p, opts, n);
     if (pol == POL_RANDOM || pol == POL_RANDOMV) {
         int k = (int)rng_below(G->rng, (uint32_t)(n + 1));
         return k == n ? -1 : opts[k];
@@ -523,11 +577,94 @@ static int greedy_score(Game *G, int p, int t) {
     return s;
 }
 
+// ---- personality players ------------------------------------------------------
+static double persona_score(Game *G, int p, int t, const Persona *P) {
+    int k = ckind(t), c = ccolor(t);
+    int h = G->hsize[p];
+    int nxt = next_alive(G, p, G->dir);
+    int nh = G->hsize[nxt];
+    double s = 0.0;
+    if (h == 1) return P->stall ? -1e6 : 1e6; // playing the last card wins
+    if (k == K_DISCALL) {
+        int cnt = 0;
+        for (int kk = 0; kk < 16; kk++) cnt += G->hand[p][c * 16 + kk];
+        if (cnt == h) return P->stall ? -1e6 : 9e5;
+        s += (P->stall ? -30.0 : 40.0) * cnt;
+    }
+    int cc[4];
+    color_counts(G, p, cc);
+    if (c != WILD) s += 5.0 * cc[c];
+    int v = drawval_kind(k);
+    int target = nxt;
+    if (k == K_WRD4) target = G->nalive == 2 ? p : next_alive(G, p, -G->dir);
+    int th = G->hsize[target];
+    if (wrd4_selfish(G, p, t)) s -= 200;
+    else if (v) {
+        s += P->attack * v + (th <= 3 ? P->leader : 0.0);
+        if (G->last_hitter[p] == target) s += P->grudge;
+        if (th + v >= G->R->mercy - 4) s -= P->mercy;            // might knock them out
+        if (P->stall) s += (th <= 3 ? 60.0 : -20.0 * v);          // top up small hands only
+    }
+    if (k == K_SKIP || k == K_SKIPALL) {
+        s += (nh <= 3 ? P->leader * 0.6 : 0.0) + P->attack;
+        if (G->last_hitter[p] == nxt) s += P->grudge * 0.5;
+    }
+    if (c == WILD) s -= P->wild_keep;
+    if (k == K_WD10 || k == K_ROUL || k == 0 || k == 7 || k == K_SKIPALL) s += P->chaos;
+    if (k == K_ROUL) {
+        s += (nh <= 3 ? P->leader : 0.0) + (G->last_hitter[p] == nxt ? P->grudge : 0.0);
+        if (nh >= 15) s -= P->mercy;
+        if (P->stall) s += nh <= 3 ? 20.0 : -300.0;
+    }
+    if (k == 7 && G->R->zero_seven) {
+        int mn = 1 << 30;
+        for (int q = 0; q < G->np; q++) if (q != p && G->alive[q] && G->hsize[q] < mn) mn = G->hsize[q];
+        if (!P->stall) s += (mn < h - 1) ? 20.0 * (h - 1 - mn) : -40.0;
+    }
+    if (k == 0 && G->R->zero_seven && !P->stall) {
+        int prv = next_alive(G, p, -G->dir);
+        s += (G->hsize[prv] < h - 1) ? 15.0 * (h - 1 - G->hsize[prv]) : -30.0;
+    }
+    if (P->stall && h <= 3) s -= 50.0 * (4 - h); // keep own hand from shrinking to nothing
+    return s + P->noise * rng_unif(G->rng);
+}
+
+static int persona_play(Game *G, int p, const int *opts, int n) {
+    const Persona *P = persona_of(G->pol[p]);
+    int best = opts[0];
+    double bs = -1e300;
+    for (int i = 0; i < n; i++) {
+        double sc = persona_score(G, p, opts[i], P);
+        if (sc > bs) { bs = sc; best = opts[i]; }
+    }
+    return best;
+}
+
+static int persona_stack(Game *G, int p, const int *opts, int n) {
+    const Persona *P = persona_of(G->pol[p]);
+    int total = G->stack;
+    int dies = G->hsize[p] + total >= G->R->mercy;
+    int cand[NT], m = 0;
+    for (int i = 0; i < n; i++) if (!wrd4_selfish(G, p, opts[i])) cand[m++] = opts[i];
+    if (m == 0) return -1;
+    if (!dies) {
+        if (P->stall && G->hsize[p] + total <= 20) return -1;   // happy to absorb it
+        if (rng_unif(G->rng) >= P->stack_p) return -1;
+    }
+    int best = cand[0];
+    for (int i = 1; i < m; i++) {
+        int a = drawval(cand[i]), b = drawval(best);
+        if (G->pol[p] == POL_GREMLIN ? a > b : a < b) best = cand[i]; // the gremlin goes big
+    }
+    return best;
+}
+
 static int choose_play(Game *G, int p, const int *opts, int n, int allow_draw) {
     if (n + (allow_draw ? 1 : 0) >= 2) G->nchoices++;
     int pol = G->pol[p];
     if (pol == POL_COLLUDE) return collude_play(G, p, opts, n);
     if (pol == POL_MCWIN) return mcwin_play(G, p, opts, n);
+    if (IS_PERSONA(pol)) return persona_play(G, p, opts, n);
     if (pol == POL_RANDOM) return opts[rng_below(G->rng, n)];
     if (pol == POL_RANDOMV) {
         if (allow_draw) {
@@ -616,12 +753,14 @@ static void play_card(Game *G, int p, int t) {
     int v = drawval_kind(k);
     switch (k) {
     case K_D2: case K_D4: case K_WD6: case K_WD10:
+        G->stack_last = p;
         G->stack += v;
         G->stackv = v;
         if (G->stack > G->max_stack) G->max_stack = G->stack;
         G->cur = next_alive(G, p, G->dir);
         break;
     case K_WRD4:
+        G->stack_last = p;
         G->stack += v;
         G->stackv = v;
         if (G->stack > G->max_stack) G->max_stack = G->stack;
@@ -648,6 +787,7 @@ static void play_card(Game *G, int p, int t) {
         break;
     case K_ROUL: {
         int victim = next_alive(G, p, G->dir);
+        G->last_hitter[victim] = p;
         G->turns++; // the victim's (lost) turn: they name a colour and reveal cards
         int chooser = G->R->roulette_chooser == 0 ? victim : p;
         int col = choose_roulette_color(G, chooser, victim);
@@ -1160,6 +1300,7 @@ static void take_turn(Game *G) {
         G->stack = 0;
         G->stackv = 0;
         G->stacks_accepted++;
+        G->last_hitter[p] = G->stack_last;
         G->draw_ctx = 2;
         draw_n(G, p, total);
         G->draw_ctx = 0;
@@ -1212,6 +1353,8 @@ static void game_init(Game *G, const Rules *R, Rng *rng, int np, const int *pol)
     G->nalive = np;
     G->force_color = -1;
     G->force_target = -1;
+    G->stack_last = -1;
+    for (int q = 0; q < MAXP; q++) G->last_hitter[q] = -1;
     int n = 0;
     for (int c = 0; c < 4; c++)
         for (int k = 0; k < 16; k++)
@@ -1414,7 +1557,8 @@ static void usage(void) {
             "  -n N              games\n"
             "  -threads N        worker threads (results depend on seed AND thread count)\n"
             "  -seed S           base seed\n"
-            "  -policy NAME      random|randomv|greedy|collude|mcwin (all seats)\n"
+            "  -policy NAME      random|randomv|greedy|collude|mcwin|shark|grandpa|gremlin|grudge|peace|\n"
+            "                    engineer|staller (all seats)\n"
             "  -seatpol a,b,...  per-seat policies (one name per player)\n"
             "  -cap N            turn cap (0 = none, the default)\n"
             "  -debug N          1 = invariant checks every turn, 2 = also print every state\n"

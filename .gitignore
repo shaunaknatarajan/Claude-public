@@ -2,3 +2,5 @@ uno-no-mercy/sim/nomercy
 uno-no-mercy/sim/*.o
 __pycache__/
 uno-no-mercy/results/**/*.log
+uno-no-mercy/humans/games/*/state.pkl.tmp
+__pycache__/
