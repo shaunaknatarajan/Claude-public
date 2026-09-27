@@ -175,6 +175,8 @@ where each AI game falls:
 | Shark, Grandpa, Gremlin, Grudge, Peacekeeper, Engineer | 152 | Leo last standing, 5 knocked out | 158 (757) | 47% |
 | 6 × Never-Ending | 69 | Zach went out | 318 (1,369) | 12% |
 
+![AI games vs bot games](figures/personas.png)
+
 Logs and each player's private notes are in [humans/games/](humans/games/). The comparison is in
 [results/personas/ai_vs_bots.json](results/personas/ai_vs_bots.json).
 

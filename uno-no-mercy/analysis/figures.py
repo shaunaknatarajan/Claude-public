@@ -104,9 +104,49 @@ def fig_mercy(fname):
     plt.close(fig)
 
 
+def fig_personas(fname):
+    """Each AI-personality game (dot) against the spread of 200,000 bot games of the same table."""
+    path = "results/personas/ai_vs_bots.json"
+    if not os.path.exists(path):
+        return
+    rows = json.load(open(path))
+    bots = {"g1": "t1_2p_shark_vs_gremlin", "g2": "t2_2p_grandpa_vs_grudge", "g3": "t3_4p_mixed",
+            "g4": "t4_4p_mixed", "g5": "t5_6p_mixed", "g6": "t6_4p_stallers", "g7": "t7_6p_stallers",
+            "g8": "t8_3p_mixed"}
+    fig, ax = plt.subplots(figsize=(7.6, 4.4))
+    for i, r in enumerate(rows):
+        d = json.load(open(f"results/personas/{bots[r['game'][:2]]}.json"))
+        h = {int(k): v for k, v in d["hist"].items()}
+        t = np.array(sorted(h))
+        cdf = np.cumsum([h[x] for x in t]) / sum(h.values())
+        q = lambda f: t[np.searchsorted(cdf, f)]
+        y = len(rows) - 1 - i
+        ax.plot([q(0.01), q(0.99)], [y, y], color=RAMP[2], lw=6, solid_capstyle="round",
+                label="bots: middle 98% of 200,000 games" if i == 0 else None)
+        ax.plot([q(0.25), q(0.75)], [y, y], color=RAMP[4], lw=6, solid_capstyle="round",
+                label="bots: middle 50%" if i == 0 else None)
+        ax.plot([d["max_turns"]], [y], marker="|", markersize=10, color=MUTED,
+                label="bots: longest game" if i == 0 else None)
+        ax.plot([r["ai_turns"]], [y], marker="o", markersize=8, color=CAT[1], markeredgecolor=SURFACE,
+                markeredgewidth=2, linestyle="none", label="AI players with personalities" if i == 0 else None)
+    ax.set_yticks(range(len(rows)))
+    short = {"g1": "Shark v Gremlin", "g2": "Grandpa v Grudge", "g8": "Shark, Peace, Gremlin",
+             "g3": "Shark, Grandpa, Gremlin, Grudge", "g4": "Peace, Engineer, Never-End, Gremlin",
+             "g6": "4 x Never-Ending", "g5": "6 mixed personalities", "g7": "6 x Never-Ending"}
+    ax.set_yticklabels([short[r["game"][:2]] for r in rows][::-1], fontsize=8.5, color=INK2)
+    ax.set_xlabel("game length (turns)")
+    ax.grid(axis="y", visible=False)
+    ax.set_title("AI players' games vs 200,000 bot games per table", loc="left", fontsize=11, color=INK)
+    ax.legend(frameon=False, fontsize=8, labelcolor=INK2, loc="upper right")
+    fig.tight_layout()
+    fig.savefig(f"figures/{fname}", dpi=160)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     fig_survival("random", "survival_random.png", "Straight lines on a log scale = exponential tail (random robots)")
     fig_survival("greedy", "survival_greedy.png", "Same for greedy robots")
     fig_colluders("survival_colluders.png")
     fig_mercy("mercy_threshold.png")
+    fig_personas("personas.png")
     print("figures written")
