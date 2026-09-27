@@ -10,7 +10,7 @@
 - Corollary A3 now says the state list is sufficient, not minimal.
 - Corollary C2 and §7 no longer refer to the removed `prolong` policy. `collude`, `mcwin` and `grudge` are finite-memory policies (Cor. C1), not stationary ones.
 - Lemma 3(b′): a span from one TURN state to the next has at most 48 micro-steps and 47 draws.
-- Overstatements about information structures are corrected (§0, Thm B(B), §5.5, §5.6, Prop. B3, §8).
+- Overstatements are corrected: the claims about information structures (§0, Thm B(B), §5.6, Prop. B3, §8), and the range of $\varepsilon$ in the §5.5 counterexample.
 
 **Conventions.**
 - $N\in\{2,\dots,6\}$ is the number of seats, fixed throughout.
@@ -197,7 +197,7 @@ The bound is $10^{85.1}$, $10^{99.4}$, $10^{111.5}$, $10^{121.9}$, $10^{131.0}$ 
 - (a) Any maximal run of consecutive draws by one player (a DRAW sequence, a penalty, or a Roulette reveal) has at most 24 draws. If it ends without a knockout, it has at most 23.
 - (b) Every turn has at most 25 micro-steps, of which at most 24 are draws.
 - (b′) Consider the span from a TURN state up to the next TURN state or END: a turn, together with the Roulette victim's turn it may trigger. Earlier versions of this document called this span a turn. It has at most 48 micro-steps, of which at most 47 are draws. The bound of 49 stated there is valid but not tight.
-- (c) Hence $T\le M\le25T$, which implies the earlier $M\le49T$, and $M=\infty\iff T=\infty$.
+- (c) Hence $T\le M\le25T$ and $M=\infty\iff T=\infty$. By (b′), also $T^\circ\le M\le48T^\circ$, so the earlier bound $M\le49T^\circ$ remains valid.
 
 *Proof.* (a) By (I3) the drawer holds $h\ge1$ cards when the run starts. Each draw adds one card, and reaching 25 knocks the drawer out, which ends the run. So the run has at most $25-h\le24$ draws. Without a knockout the hand ends with at most 24 cards, so there are at most $24-h\le23$ draws.
 
@@ -214,7 +214,7 @@ The maximum is $1+24=25$. Every turn contains at most one draw run, so it has at
 
 (b′) By §2.3 a span contains at most one RCOL state, and it is reached only through a Roulette play. A span without one is a single turn. If the Roulette is played from the hand, the span has at most $1+1+24=26$ steps. If the Roulette is the forced play ending a draw run, that run ends without a knockout and has at most 23 draws, by (a). The span then has at most $23+1+24=48$ steps and $23+24=47$ draws.
 
-(c) $s_0$ is a TURN state, so every micro-step before absorption belongs to exactly one turn. Each turn contains at least 1 and at most 25 micro-steps. $\square$
+(c) $s_0$ is a TURN state, so every micro-step before absorption belongs to exactly one turn, and to exactly one span. Each turn contains at least 1 and at most 25 micro-steps, and each span at most 48. $T^\circ\le T\le M$ by §2.3. $\square$
 
 ## 3. (d) No deadlock
 
@@ -308,7 +308,7 @@ Summing over the countably many pairs $(j,Z)$ shows that, given $\mathcal G_n$, 
 
 **Corollaries.**
 - **(A1)** For a stationary type-level policy $\pi$, $(s_n)$ is a time-homogeneous Markov chain on $S$ with kernel $P_\pi(s,s')=\sum_a\pi(a|s)p(s'|s,a)$.
-- **(A2) Implementation equivalence.** Fix a non-anticipating profile. The pre-shuffled pile read from the top (`sim/nomercy.c`) and on-demand sampling without replacement (`crosscheck/ref_nomercy.py`) then produce the same law of the type-level trajectory: by Theorem A, both draw each card uniformly from $D^*_n$ given $\mathcal G_n$. Here, as throughout, the generators' outputs are idealised as independent and uniform.
+- **(A2) Implementation equivalence.** Fix a non-anticipating profile. The pre-shuffled pile read from the top (`sim/nomercy.c`) and on-demand sampling without replacement (`crosscheck/ref_nomercy.py`) then produce the same law of the type-level trajectory: by Theorem A, both draw each card uniformly from $D^*_n$ given $\mathcal G_n$. Here the simulator's random-number generators are idealised as producing independent uniform outputs, as in the physical model above.
 
   *Code audit.* A grep of the current `sim/nomercy.c` for every access to the pile array (`G->pile`, or the pile of a copy of the game) finds these functions:
   - The dynamics: `game_init`, `reshuffle`, `draw_one`, and `eliminate`. `eliminate` touches the pile only under the non-default `-elim_cards 0|1`.
@@ -322,7 +322,7 @@ Summing over the countably many pairs $(j,Z)$ shows that, given $\mathcal G_n$, 
 
   No other function reads the pile. In particular, `random`, `randomv`, `greedy` and the persona policies (`shark`, `grandpa`, `gremlin`, `grudge`, `peace`, `engineer`, `staller`) never do.
 
-  *`mcwin`.* `determinize` copies the pile, together with the opponents' hands, into a pool. It reorders the pool with a uniform shuffle from a generator seeded by one draw from the game's generator. For a fixed seed, `mcwin`'s action is a function of the pile order $\omega_n$, so it is not $\mathcal G_n$-measurable if the seed is counted in $\xi_n$. However, a uniform shuffle of a sequence gives a uniform arrangement of its multiset, whatever the input order. So the conditional law of the action given $\mathcal G_n\vee\sigma(\omega_n)$ does not depend on $\omega_n$. With the seed left out of the filtration, the action is conditionally independent of $\omega_n$ given $\mathcal G_n$.
+  *`mcwin`.* `determinize` copies the pile, together with the opponents' hands, into a pool. It reorders the pool with a uniform shuffle from a generator seeded by one draw from the game's generator. For a fixed seed, `mcwin`'s action is a function of the past and of the pile order $\omega_n$, so it is not $\mathcal G_n$-measurable if the seed is counted in $\xi_n$. However, the pool's composition is $\mathcal G_n$-measurable. A uniform shuffle of a sequence gives a uniform arrangement of its multiset, whatever the input order. So the conditional law of the action given $\mathcal G_n\vee\sigma(\omega_n)$ does not depend on $\omega_n$. With the seed left out of the filtration, the action is conditionally independent of $\omega_n$ given $\mathcal G_n$.
 
   Equivalently, `mcwin` has the same action law as the variant that shuffles the pool from a canonical (sorted) order. That variant is non-anticipating, with the seed in $\xi_n$. By induction on $n$, the two induce the same joint law of configurations and pile orders, so Theorem A and this corollary apply to `mcwin` through the variant.
 
@@ -479,18 +479,25 @@ $$P(T>t)\le P(\tau_F>t)\le(1-\varepsilon_\pi^{k_\pi})^{\lfloor t/k_\pi\rfloor}.$
 
 (3)⇒(1) with the tail bound: by Corollary A1, the chain is an admissible play of the single-action MDP with kernel $P_\pi$. Its attractor is exactly the set of states from which $F$ is reachable under $P_\pi$. (3) says $R_\pi\subseteq$ this attractor. Theorem B(A) then applies with $K\le k_\pi$ and $\varepsilon=\varepsilon_\pi$. $\square$
 
-**Corollary C1 (finite memory).** A policy run by a finite automaton with memory $m\in\mathcal M$ gives a Markov chain on $S\times\mathcal M$. The same equivalence and geometric tail hold. So for stationary or finite-memory profiles, $E[T]=\infty$ happens only through a positive probability of a never-ending game, never through a heavy tail.
+**Corollary C1 (finite memory).** Consider a policy run by a finite automaton with memory $m\in\mathcal M$. The action and the next memory value may be drawn jointly, from a law that depends only on the current state and memory. Such a policy gives a Markov chain on $S\times\mathcal M$. The same equivalence and geometric tail hold. So for stationary or finite-memory profiles, $E[T]=\infty$ happens only through a positive probability of a never-ending game, never through a heavy tail.
 
-**Corollary C2 (full support, including uniformly random play).** Suppose $\pi(a|s)>0$ for every legal type-level action. The simulator's `random` policy qualifies:
+**Corollary C2 (full support, including uniformly random play).** Suppose $\pi$ is stationary and $\pi(a|s)>0$ for every legal type-level action. The simulator's `random` policy qualifies. Each of its choices is a function of the current micro-state and fresh coins, so it is stationary, and it has full support:
 - it plays uniformly over distinct playable types (at least 1/24);
 - facing a stack, it chooses uniformly over the stackable types (at most 11) plus accept (at least 1/12);
-- it chooses colours with probability 1/4, and swap targets with probability at least 1/5.
+- it chooses colours, including a Roulette victim's colour, with probability 1/4, and swap targets with probability at least 1/5.
+
+`randomv` coincides with `random` under the default rules. It differs only under `-voluntary_draw 1`.
 
 For such $\pi$, $R_\pi=R$, and condition (3) is equivalent to **no trap**: from every $s\in R$, some finite path of legal decisions and positive-probability draws ends the game. So under uniformly random play:
 - if there is no trap, $E[T]<\infty$ with geometric tails;
 - otherwise $P(T=\infty)>0$.
 
-Case (A) of Theorem B implies no trap, but not conversely. The simulator's `greedy` and `prolong` policies are stationary and randomised, but not full-support. For them, condition (3) must be checked directly, or it follows from (A).
+Case (A) of Theorem B implies no trap, but not conversely.
+
+The other simulator policies are not full-support. For them, condition (3), or its analogue on $S\times\mathcal M$, must be checked directly, or it follows from (A).
+- `greedy`, and the persona policies `shark`, `grandpa`, `gremlin`, `peace`, `engineer` and `staller`, are stationary and randomised.
+- `collude` and `mcwin` are not stationary. At a TURN state they choose the card together with the wild colour and the 7-target. They store the colour and target in `force_color` and `force_target` and use them at the following WCOL or SWAP micro-state. There, the choice cannot be recovered from $s$: the previous top card has been merged into $X$, and $s$ does not record whether the wild was chosen or was drawn and then forced. So, strictly, they are finite-memory policies with memory (`force_color`, `force_target`). Corollary C1 covers them, and not the stationary case of Theorem C. For `mcwin` this goes through the equivalent variant of Corollary A2.
+- `grudge` also remembers who last made each player draw (`last_hitter`, updated through `stack_last`). This is finite memory, again covered by Corollary C1.
 
 **Conjecture E (no trap, $N=2..6$).** From every reachable non-terminal micro-state, some finite legal path with positive-probability draws ends the game. This is **unproven**.
 
@@ -498,25 +505,32 @@ Partial observation: suppose a Roulette is played when $|D|\ge32$. Let the victi
 
 ## 7. Numerical sanity checks
 
-These were run with an instrumented copy of `nomercy.c` in the scratchpad; `sim/` was not modified.
+**Which build.** The invariant, bound and draw-uniformity checks below were run with an instrumented copy of an earlier build of `nomercy.c`, in the scratchpad; `sim/` was not modified. That build counted turns as $T^\circ$ (§2.3). Its policies were random, greedy and prolong; prolong has since been replaced by collude and mcwin. The game-length figures (Corollary A2, Theorem C) are given for the current count $T$. The previous version's figures, which used $T^\circ$ and came from the first build (`results/crosscheck_v1/`), are kept for reference.
 
 - **Invariants.** Card conservation, hand size at most 24, and the current player being active were checked after every turn in 1.5M games ($N\in\{2..6\}$ × policies {random, greedy, prolong} × 100k). There were 0 violations and 0 deadlocks.
 - **Bounds of Thm D and Lemma 3.**
-  - Maximum single draw run: 24 (bound 24, attained).
-  - Maximum draws in one turn: 42 (bound 48).
+  - Maximum single draw run: 24 (bound 24, attained). Under the current count a turn contains at most one draw run, so this also bounds the draws per turn.
+  - Maximum draws in one span from a TURN state to the next (one turn under $T^\circ$): 42 (bound 47, Lemma 3(b′)).
   - Maximum $|D^*|$ at a draw: 165 (bound 165, attained).
   - Minimum $|D|+|X|$ at a draw: 119, 74 and 40 for $N=2,4,6$ (bounds 119, 71 and 23).
 - **Theorem A (draw uniformity).** Martingale z-scores were computed for $\sum(1\{\text{drawn}\in\text{class}\}-D^*(\text{class})/|D^*|)$. The classes were wild, red, first draw after a reshuffle, and draw inside draw-until-playable. Over 9 runs of 100k games, all 36 z-values had $|z|<2.5$, with a mean near 0, consistent with N(0,1).
-- **Corollary A2.** The deferred-sampling reference (40k games) gives mean $T$ = 29.99±0.11 (2p) and 127.74±0.27 (6p). The physical-pile C simulator (2M games) gives 30.106±0.016 and 127.734±0.039. These agree.
-- **Theorem C.** Under random play the empirical survival functions are log-linear between the 99% and 99.99% quantiles. The per-turn decay rates are 0.920, 0.947, 0.951, 0.954 and 0.956 for $N=2..6$, stable across half-windows. The simulator has no cap, and all 10M games terminated (max 456 turns). So if a trap is reachable under random play, it is hit with probability below $1.5\times10^{-6}$ per $N$ (95% bound).
+- **Corollary A2.**
+  - The deferred-sampling reference (`crosscheck/ref_nomercy.py`, 400k games per $N$, `crosscheck/ref_results_v2.json`) gives mean $T$ = 31.925±0.037 (2p) and 135.457±0.091 (6p).
+  - The physical-pile C simulator (current build, $2\times10^7$ games per $N$, `results/final/random_p*.json`) gives 31.902±0.005 and 135.472±0.013.
+  - These agree ($z=+0.61$ and $-0.17$). `crosscheck/COMPARISON.md` has all five player counts.
+  - Under $T^\circ$ with the first build, the previous version reported 29.99±0.11 and 127.74±0.27 (reference, 40k games) against 30.106±0.016 and 127.734±0.039 (C, 2M games, `results/crosscheck_v1/`).
+- **Theorem C.**
+  - Under random play, least-squares fits of $\log P(T>t)$ between the 99% and 99.99% quantiles of `results/final/random_p*.json` give per-turn decay rates of 0.923, 0.950, 0.952, 0.955 and 0.957 for $N=2..6$. Fits on the two half-windows differ by at most 0.012.
+  - The simulator has no cap, and all $10^8$ games ($2\times10^7$ per $N$) terminated (max 546 turns). So if a trap is reachable under random play, it is hit with probability below $1.5\times10^{-7}$ per $N$ (95% bound).
+  - Under $T^\circ$ with the first build (10M games), the previous version reported rates of 0.920, 0.947, 0.951, 0.954 and 0.956, a maximum of 456 turns, and a bound of $1.5\times10^{-6}$. The same fitting method reproduces those rates from `results/crosscheck_v1/`.
 - **§5.5.** The counterexample gives 2046, versus 20 and 10240.
 
 ## 8. Summary of what is proven
 
 **Proven:** (d), (a), (b) and (c) exactly as stated in Theorems D, A, B and C, including:
-- the explicit constants: $\varepsilon\ge1/165$, $K\le|R\setminus F|<10^{132}$, $E[T]\le K\,165^K$ in case (A), and at most 49 micro-steps per turn;
+- the explicit constants: $\varepsilon\ge1/165$, $K\le|R\setminus F|<10^{132}$, $E[T]\le K\,165^K$ in case (A), and at most 25 micro-steps per turn (48 from one TURN state to the next);
 - the correction of the task's $K/\varepsilon$;
-- the precise information-structure boundary: non-anticipating profiles are covered and clairvoyant ones are not.
+- the scope of the information structures covered. Theorems A and B cover non-anticipating profiles. Clairvoyant profiles that cannot foresee reshuffles satisfy the dichotomy only on the enlarged model of Prop. B3, with $C'\supseteq\mathrm{lift}(C)$. Other anticipating profiles are not covered. This describes what the proofs cover, not a proven sharp boundary: whether $C=\varnothing$ but $C'\neq\varnothing$ can happen is open.
 
 **Not proven, and outside T1:**
 - which alternative of Theorem B holds, i.e. whether $C\cap R=\varnothing$;

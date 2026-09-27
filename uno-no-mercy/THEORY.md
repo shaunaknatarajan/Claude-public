@@ -25,20 +25,22 @@ Call a set of non-terminal states **safe** if from each of them the players have
 every possible outcome (every card that could be drawn) stays inside the set. Let C be the
 largest safe set. Exactly one of these holds:
 
-- **C is unreachable.** Then for *every* way of playing — any mix of competition, collusion,
-  memory, randomization or full knowledge of all hands — the game ends with probability 1, the
-  probability that it lasts more than t turns decays geometrically, and E[T] ≤ K·165^K for a
-  finite K. (The bound is astronomically loose; it only certifies finiteness.)
+- **C is unreachable.** Then for *every* way of playing that never sees the order of the draw
+  pile — any mix of competition, collusion, memory, randomization or full knowledge of all
+  hands — the game ends with probability 1, the probability that it lasts more than t turns
+  decays geometrically, and E[T] ≤ K·165^K for a finite K. (The bound is astronomically loose;
+  it only certifies finiteness.)
 - **C is reachable.** Then some colluding strategy (all players sharing information) keeps the
   game going forever with positive probability, so its expected length is infinite.
 
 So "can the mean be infinite?" is exactly the question "does a reachable safe set exist?" It is a
-finite, in-principle decidable property of a huge graph. It cannot be infinite because of a
-heavy tail: for any fixed strategy it is either a finite mean with an exponential tail, or a
-positive chance of never ending.
+finite, in-principle decidable property of a huge graph. For the strategies described next, it
+cannot be infinite because of a heavy tail: each has either a finite mean with an exponential
+tail, or a positive chance of never ending.
 
-A second consequence (T1, Thm C): for any fixed strategy that uses only the current state and
-coin flips (all of our robots do),
+A second consequence (T1, Thm C and Cor. C1): for any fixed strategy that uses only the current
+state, coin flips and a finite memory (all of our robots do; the look-ahead robots `collude` and
+`mcwin` carry a chosen color or 7-target from one step to the next),
 
 > E[T] < ∞ ⟺ P(the game ends) = 1 ⟺ from every reachable state, the end is still reachable.
 
