@@ -1,0 +1,146 @@
+[turn 0] Zia deals. Starting card: Yellow 4. Zoe goes first.
+[turn 1] Zoe plays Yellow 6. (6 left)
+[turn 2] Zara plays Wild Draw 10, naming Red. (6 left)
+[turn 2] Zed faces a penalty of 10.
+[turn 3] Zed can't or won't stack and draws the penalty of 10.
+[turn 4] Zia plays Red 8. (6 left)
+[turn 5] Zoe plays Red 9. (5 left)
+[turn 6] Zara plays Red 2. (5 left)
+[turn 7] Zed plays Red Draw 2. (16 left)
+[turn 7] Zia faces a penalty of 2.
+[turn 8] Zia can't or won't stack and draws the penalty of 2.
+[turn 9] Zoe has nothing playable, draws 2 card(s) and must play the Wild Draw 6.
+[turn 9] Zoe plays Wild Draw 6, naming Blue. (6 left)
+[turn 9] Zara faces a penalty of 6.
+[turn 10] Zara can't or won't stack and draws the penalty of 6.
+[turn 11] Zed plays Blue 8. (15 left)
+[turn 12] Zia plays Blue 5. (7 left)
+[turn 13] Zoe plays Blue 3. (5 left)
+[turn 14] Zara plays Blue 3. (10 left)
+[turn 15] Zed plays Blue 1. (14 left)
+[turn 16] Zia plays Blue 1. (6 left)
+[turn 17] Zoe plays Blue 6. (4 left)
+[turn 18] Zara plays Blue 9. (9 left)
+[turn 19] Zed plays Blue 2. (13 left)
+[turn 20] Zia plays Blue Skip. (5 left)
+[turn 20] Zoe is skipped.
+[turn 21] Zara plays Yellow Skip. (8 left)
+[turn 21] Zed is skipped.
+[turn 22] Zia plays Yellow 5. (4 left)
+[turn 23] Zoe plays Yellow Skip. (3 left)
+[turn 23] Zara is skipped.
+[turn 24] Zed plays Yellow Draw 2. (12 left)
+[turn 24] Zia faces a penalty of 2.
+[turn 25] Zia can't or won't stack and draws the penalty of 2.
+[turn 26] Zoe plays Yellow Discard All and discards 1 more Yellow card(s). (1 left)
+[turn 27] Zara plays Yellow 9. (7 left)
+[turn 28] Zed plays Yellow Reverse. (11 left)
+[turn 28] Direction reverses.
+[turn 29] Zara plays Red Reverse. (6 left)
+[turn 29] Direction reverses.
+[turn 30] Zed plays Red 4. (10 left)
+[turn 31] Zia plays Wild Color Roulette. (5 left)
+[turn 32] Zoe names Green and reveals 11 card(s) until one appears; they keep them all (12 cards).
+[turn 33] Zara plays Green 0. (5 left)
+[turn 33] Everyone passes their hand to the next player.
+[turn 34] Zed plays Green 0. (4 left)
+[turn 34] Everyone passes their hand to the next player.
+[turn 35] Zia has nothing playable, draws 1 card(s) and must play the Green Reverse.
+[turn 35] Zia plays Green Reverse. (4 left)
+[turn 35] Direction reverses.
+[turn 36] Zed plays Green 1. (11 left)
+[turn 37] Zara plays Green 3. (4 left)
+[turn 38] Zoe plays Green Draw 2. (9 left)
+[turn 38] Zia faces a penalty of 2.
+[turn 39] Zia can't or won't stack and draws the penalty of 2.
+[turn 40] Zed plays Wild Color Roulette. (10 left)
+[turn 41] Zara names Green and reveals 7 card(s) until one appears; they keep them all (11 cards).
+[turn 42] Zoe plays Green 5. (8 left)
+[turn 43] Zia plays Green 4. (5 left)
+[turn 44] Zed plays Wild Reverse Draw 4, naming Red. (9 left)
+[turn 44] Direction reverses; Zia now faces a penalty of 4.
+[turn 45] Zia can't or won't stack and draws the penalty of 4.
+[turn 46] Zoe plays Red Skip. (7 left)
+[turn 46] Zara is skipped.
+[turn 47] Zed plays Red Reverse. (8 left)
+[turn 47] Direction reverses.
+[turn 48] Zara plays Red Skip. (10 left)
+[turn 48] Zoe is skipped.
+[turn 49] Zia plays Red 9. (8 left)
+[turn 50] Zed plays Red Skip. (7 left)
+[turn 50] Zara is skipped.
+[turn 51] Zoe plays Wild Reverse Draw 4, naming Red. (6 left)
+[turn 51] Direction reverses; Zara now faces a penalty of 4.
+[turn 52] Zara can't or won't stack and draws the penalty of 4.
+[turn 53] Zed plays Red Discard All and discards 1 more Red card(s). (5 left)
+[turn 54] Zia plays Red 7. (7 left)
+[turn 54] Zia swaps hands with Zed.
+[turn 55] Zoe plays Red Draw 4. (5 left)
+[turn 55] Zara faces a penalty of 4.
+[turn 56] Zara can't or won't stack and draws the penalty of 4.
+[turn 57] Zed plays Wild Reverse Draw 4, naming Yellow. (6 left)
+[turn 57] Direction reverses; Zara now faces a penalty of 4.
+[turn 58] Zara can't or won't stack and draws the penalty of 4.
+[turn 59] Zoe plays Wild Reverse Draw 4, naming Yellow. (4 left)
+[turn 59] Direction reverses; Zara now faces a penalty of 4.
+[turn 60] Zara can't or won't stack and draws the penalty of 4.
+[turn 60] Zara reaches 25 cards and is knocked out by the Mercy rule!
+[turn 61] Zed plays Yellow 8. (5 left)
+[turn 62] Zia plays Yellow 2. (4 left)
+[turn 63] Zoe plays Wild Reverse Draw 4, naming Yellow. (3 left)
+[turn 63] Direction reverses; Zia now faces a penalty of 4.
+[turn 64] Zia plays Wild Draw 6, naming Yellow. (3 left)
+[turn 64] Zed faces a penalty of 10.
+[turn 65] Zed can't or won't stack and draws the penalty of 10.
+[turn 66] Zoe has nothing playable, draws 2 card(s) and must play the Wild Color Roulette.
+[turn 66] Zoe plays Wild Color Roulette. (4 left)
+[turn 67] Zia names Green and reveals 7 card(s) until one appears; they keep them all (10 cards).
+[turn 68] Zed plays Green 3. (14 left)
+[turn 69] Zoe plays Green 9. (3 left)
+[turn 70] Zia plays Green Draw 4. (9 left)
+[turn 70] Zed faces a penalty of 4.
+[turn 71] Zed can't or won't stack and draws the penalty of 4.
+[turn 72] Zoe plays Green Draw 4. (2 left)
+[turn 72] Zia faces a penalty of 4.
+[turn 73] Zia can't or won't stack and draws the penalty of 4.
+[turn 74] Zed plays Green Skip. (17 left)
+[turn 74] Zoe is skipped.
+[turn 75] Zia plays Green 7. (12 left)
+[turn 75] Zia swaps hands with Zed.
+[turn 76] Zed plays Blue 7. (11 left)
+[turn 76] Zed swaps hands with Zoe.
+[turn 77] Zoe plays Blue 0. (10 left)
+[turn 77] Everyone passes their hand to the next player.
+[turn 78] Zia plays Blue Skip Everyone. (9 left)
+[turn 78] Everyone else is skipped; Zia goes again.
+[turn 79] Zia plays Blue Skip Everyone. (8 left)
+[turn 79] Everyone else is skipped; Zia goes again.
+[turn 80] Zia plays Red Skip Everyone. (7 left)
+[turn 80] Everyone else is skipped; Zia goes again.
+[turn 81] Zia plays Red 3. (6 left)
+[turn 82] Zed plays Yellow 3. (16 left)
+[turn 83] Zoe has nothing playable, draws 5 card(s) and must play the Yellow Discard All.
+[turn 83] Zoe plays Yellow Discard All and discards 0 more Yellow card(s). (6 left)
+[turn 84] Zia plays Yellow 2. (5 left)
+[turn 85] Zed plays Yellow Reverse. (15 left)
+[turn 85] Direction reverses.
+[turn 86] Zia plays Yellow 0. (4 left)
+[turn 86] Everyone passes their hand to the next player.
+[turn 87] Zoe plays Yellow 7. (3 left)
+[turn 87] Zoe swaps hands with Zed.
+[turn 88] Zed plays Wild Reverse Draw 4, naming Blue. (2 left)
+[turn 88] Direction reverses; Zoe now faces a penalty of 4.
+[turn 89] Zoe can't or won't stack and draws the penalty of 4.
+[turn 90] Zia plays Blue 0. (14 left)
+[turn 90] Everyone passes their hand to the next player.
+[turn 91] Zed plays Blue 7. (13 left)
+[turn 91] Zed swaps hands with Zoe.
+[turn 92] Zoe plays Blue 4. (12 left)
+[turn 93] Zia plays Blue Discard All and discards 0 more Blue card(s). (9 left)
+[turn 94] Zed plays Blue Draw 2. (1 left)
+[turn 94] Zoe faces a penalty of 2.
+[turn 95] Zoe can't or won't stack and draws the penalty of 2.
+[turn 96] Zia has nothing playable, draws 1 card(s) and must play the Blue 4.
+[turn 96] Zia plays Blue 4. (9 left)
+[turn 97] Zed plays Blue Draw 2. (0 left)
+[turn 97] GAME OVER after 97 turns: Zed wins (played their last card).

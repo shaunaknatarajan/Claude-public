@@ -1,0 +1,73 @@
+== Maya
+  (turn 8) Stacking draw 2 on whoever's next, Priya and Tyler both at 5 - keep them fat
+  (turn 39) Priya at 21, one swap from knockout territory for me - dump my hand on her
+  (turn 45) 21 cards is too close to knockout - dumping all yellow with Discard All. Priya's swap put me here, she's next target.
+  (turn 48) Stacked back to Priya via reverse; Joe's at 1 card and dangerous, need to watch him next
+  (turn 52) 17 cards is too close to knockout - dumping all green with Discard All to thin my hand.
+  (turn 60) Tyler's fat at 20 but I've got nothing to hit him with right now - just shedding low red, saving my Reverse for when it matters.
+  (turn 64) 20 cards, too close to mercy - just shedding, no stack option available
+  (turn 73) 23 cards, drawing 6 knocks me out - had to stack the Draw 10 onto Joe, smallest hand, to survive
+  (turn 76) 22 cards, near mercy - dumping all red to thin hand fast, still watching Tyler and Priya as targets
+  (turn 85) Priya's at 13, closest to going out - reversing to hit her with the Draw 4, naming Green since that's my biggest pile
+  (turn 88) Swapping with Priya, smallest hand at 17 - always steal the leader's advantage.
+  (turn 91) Priya's the real threat at 12 but I can only reach Tyler from here - Draw 2 on him, keep shedding, watch for a chance to swing at Priya next.
+  (turn 94) Tyler's at 20, close to mercy - hitting him with Draw 2 to push him toward knockout, still watching Priya at 11 as the real threat
+  (turn 97) Tyler's at 22, near mercy - skipping everyone to go again, keep shedding and denying him a turn to recover. Priya still the real threat at 10.
+  (turn 98) Chaining Skip Everyone to keep going again and shed fast - Tyler at 22 is close to mercy, Priya at 10 still the real threat to watch
+  (turn 99) Tyler at 22, one more push toward mercy - Draw 2 on him again. Priya at 10 still the real threat once Tyler's out.
+  (turn 104) Priya's the real threat at 12 - hitting her with Green Draw 4 to force a big draw and keep shedding my own pile.
+  (turn 106) Down to just me and Priya. My only Wild Reverse Draw4 would boomerang back on me 2p-style with no stack left - stupid to inflate the penalty just to eat it myself. Taking the 8, staying loaded with Sk
+== Joe
+  (turn 1) Keeping my Wild Reverse Draw 4 and Skips in hand for emergencies. Played the low number first.
+  (turn 7) Not escalating a penalty war over 2 cards, saving my Wild Reverse Draw 4 for emergencies.
+  (turn 11) Playing safe Green Skip, saving my Wild Reverse Draw 4 for real emergencies.
+  (turn 18) Just 2 cards, not worth escalating. Saving my Wild Reverse Draw 4 for a real emergency.
+  (turn 23) Easy Yellow 9, no reason to burn my Skips or touch the Wild Reverse Draw 4. Still hoarding for a real emergency.
+  (turn 27) Easy Blue 8, no reason to touch my Wild Reverse Draw 4 or Roulette cards. Still hoarding wilds.
+  (turn 33) Easy Red Skip, no reason to touch my Wild Reverse Draw 4 or Roulette. Still hoarding wilds for a real emergency.
+  (turn 36) Forced to play a wild since nothing matches Green. Using a Roulette card instead of my Wild Reverse Draw 4 -- still saving that one for a real emergency.
+  (turn 40) Forced to play a wild again. Reverse Draw 4 would flip order and dump 4 on poor Maya who's already at 21 cards -- not doing that to her. Using Roulette instead, still hoarding the Reverse Draw 4 for a
+  (turn 43) Avoided starting a Draw 2 war, played the Skip instead. Still hoarding the Wild Reverse Draw 4 for a real emergency.
+  (turn 46) Still hoarding the Wild Reverse Draw 4 for a real emergency -- Skip Everyone lets me go again without touching it.
+  (turn 47) Finally forced to use the Reverse Draw 4 -- no other card was legal. Named Blue since I've got that Draw 2 left to follow up with.
+  (turn 55) Easy Green 1, no need to touch wilds or start trouble. Tyler's at 21 cards, poor guy, not making it worse.
+  (turn 63) Easy Yellow 1, no need to stir trouble. Maya's near mercy at 20, definitely not going to touch her.
+  (turn 67) Avoided starting a Draw 2 war again, just played the Blue Skip. Hoarding the Green Draw 2 and Skip Everyone for later.
+== Tyler
+  (turn 6) Dropping a Draw 2 to keep chaos rolling, saving the other Draw 2 and Reverse for stacking fun.
+  (turn 13) Unleashed Wild Reverse Draw 4 on Red - let's see who dares stack back. Priya's at 1 card so I want chaos NOW before she wins.
+  (turn 17) Dropped Red Draw 2 on Joe to keep the chaos train rolling.
+  (turn 21) Skip Everyone, I go again - keep the chaos train rolling and watch their faces
+  (turn 30) Nuked Priya with Reverse Draw 4 before she could win at 1 card - pure chaos, naming Red since I'm stacked with reds
+  (turn 37) Named Yellow for the roulette - let's see how many cards I rack up, more chaos fuel for me
+  (turn 41) Naming Blue for the roulette - more chaos fuel, let's see how many I rack up
+  (turn 50) Dropped Wild Draw 10 naming Green - Joe's at 1 card so let's see him try to stack out of THIS
+  (turn 58) Dropped Wild Draw 6 on Joe naming Red, my hand's getting scary big but who cares, chaos first
+  (turn 71) Named Blue again for the roulette, love watching the pile stack up
+  (turn 75) Skipping Priya for chaos, watching Maya's pile of doom at 22
+  (turn 77) Reverse for chaos, keep the drama flowing
+  (turn 87) Swapped with Maya, she's got the biggest stack, let's see her sweat
+  (turn 100) Stacked the Wild Reverse Draw 4 naming Green, reverse sends the +6 back to Maya not me - chaos with a side of self-preservation, I'm at 22 cards and can't afford to eat this one
+== Priya
+  (turn 3) No grudges yet. Keeping Wild Draw 6 in hand for later leverage/revenge. Played Red 5, safe and simple.
+  (turn 5) No grudges yet - Maya just reversed, nothing personal. Kept Wild Draw 6 in hand for leverage/revenge later. Played Red Discard All, sensible move.
+  (turn 9) Maya hit me with Yellow Draw 2 - noted. Stacked Wild Draw 6 naming Green to dump it offensively and set up my green cards; penalty now falls on Tyler.
+  (turn 12) Dumped all green cards with Discard All to slash my hand down to just Blue Skip - efficient, no new grudges this turn.
+  (turn 25) Maya's hit me with Draw 2 twice now - stacked Draw 4 to push it to Tyler, keeping the real grudge score against Maya.
+  (turn 29) Maya's on 1 card (UNO) - grudge payback time. Swapping hands with her via Blue 7 steals her near-win and dumps my 5 cards on her. Sweet revenge for those Draw 2s.
+  (turn 34) Playing Wild Draw 6 naming Green to hit Maya (3 cards) hard and set up my remaining green cards for next turn.
+  (turn 38) Tyler at 21 cards, near mercy knockout - swapping my 8-card hand onto him is brutal payback and could knock him out. No fresh grudge, just opportunism.
+  (turn 44) Joe's down to 3 cards, dangerous - saving my Skips for when he's next in line. Just shedding Yellow 8 for now.
+  (turn 53) Tyler's next in line, not a grudge target, but Wild Draw 10 naming Green sheds my big card and hits him hard while keeping my green cards flowing. Maya's still the real grudge - she's dodged this one.
+  (turn 57) Nothing to avenge right now, just shedding Red 2 and keeping my Skips/Discard All in reserve for Maya.
+  (turn 65) Shedding Blue Draw 2 on Tyler, keeping my wilds and Skips in reserve for Maya - she's still the real target.
+  (turn 68) Reverse Draw 4 naming Blue flips direction back onto Maya - she's still the real target, finally landing one on her.
+  (turn 72) Maya's at 23 cards - Wild Draw 6 on her could knock her out. This is the grudge payoff I've been saving wilds for.
+  (turn 79) Maya hit me with roulette - naming Yellow since I've got a spare Yellow 9 and little else has gone yellow lately, hoping for a short draw. Maya's still the target, saving my Skips/Discard All for her.
+  (turn 81) Maya's still the target - Yellow Draw 4 lands on her since Tyler reversed back to me. Saving Skips/Discard All for later.
+  (turn 84) Shedding Yellow 9, keeping Roulette/Skips/Discard All in reserve for Maya - still the target.
+  (turn 89) Blue Skip Everyone - go again, keep hunting for a way to hit Maya, still the target.
+  (turn 90) Reversing to skip Tyler and get back to Maya faster - still the target, saving anything nasty I draw for her.
+  (turn 93) Shedding Blue 9, keeping Reverse in hand - don't want to flip order away from Maya. Still the target.
+  (turn 96) Shedding Blue 6, still keeping Reverse to stay pointed at Maya. Tyler's close to knockout but Maya's still the target.
+  (turn 105) Stacking Yellow Draw 4 back onto Maya - still the target, keeping her penalty growing.

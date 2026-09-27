@@ -1,0 +1,61 @@
+[turn 0] Tyler deals. Starting card: Red 7. Maya goes first.
+[turn 1] Maya plays Red Discard All and discards 2 more Red card(s). (4 left)
+[turn 2] Sam plays Blue Discard All and discards 1 more Blue card(s). (5 left)
+[turn 3] Tyler plays Wild Draw 6, naming Green. (6 left)
+[turn 3] Maya faces a penalty of 6.
+[turn 4] Maya can't or won't stack and draws the penalty of 6.
+[turn 5] Sam plays Green 2. (4 left)
+[turn 6] Tyler plays Green Skip. (5 left)
+[turn 6] Maya is skipped.
+[turn 7] Sam plays Green Draw 4. (3 left)
+[turn 7] Tyler faces a penalty of 4.
+[turn 8] Tyler can't or won't stack and draws the penalty of 4.
+[turn 9] Maya plays Wild Draw 10, naming Green. (9 left)
+[turn 9] Sam faces a penalty of 10.
+[turn 10] Sam can't or won't stack and draws the penalty of 10.
+[turn 11] Tyler plays Wild Reverse Draw 4, naming Green. (8 left)
+[turn 11] Direction reverses; Sam now faces a penalty of 4.
+[turn 12] Sam can't or won't stack and draws the penalty of 4.
+[turn 13] Maya plays Green 8. (8 left)
+[turn 14] Tyler plays Blue 8. (7 left)
+[turn 15] Sam plays Red 8. (16 left)
+[turn 16] Maya plays Red 4. (7 left)
+[turn 17] Tyler plays Green 4. (6 left)
+[turn 18] Sam plays Green 4. (15 left)
+[turn 19] Maya plays Green 6. (6 left)
+[turn 20] Tyler plays Green 5. (5 left)
+[turn 21] Sam plays Yellow 5. (14 left)
+[turn 22] Maya plays Yellow Draw 4. (5 left)
+[turn 22] Tyler faces a penalty of 4.
+[turn 23] Tyler can't or won't stack and draws the penalty of 4.
+[turn 24] Sam plays Yellow 4. (13 left)
+[turn 25] Maya plays Yellow Discard All and discards 2 more Yellow card(s). (2 left)
+[turn 26] Tyler plays Wild Reverse Draw 4, naming Green. (8 left)
+[turn 26] Direction reverses; Maya now faces a penalty of 4.
+[turn 27] Maya can't or won't stack and draws the penalty of 4.
+[turn 28] Sam plays Green Draw 2. (12 left)
+[turn 28] Tyler faces a penalty of 2.
+[turn 29] Tyler plays Red Draw 4. (7 left)
+[turn 29] Maya faces a penalty of 6.
+[turn 30] Maya plays Wild Draw 10, naming Red. (5 left)
+[turn 30] Sam faces a penalty of 16.
+[turn 31] Sam can't or won't stack and draws the penalty of 16.
+[turn 31] Sam reaches 25 cards and is knocked out by the Mercy rule!
+[turn 32] Tyler plays Red Skip Everyone. (6 left)
+[turn 32] Everyone else is skipped; Tyler goes again.
+[turn 33] Tyler plays Green Skip Everyone. (5 left)
+[turn 33] Everyone else is skipped; Tyler goes again.
+[turn 34] Tyler has nothing playable, draws 2 card(s) and must play the Green 3.
+[turn 34] Tyler plays Green 3. (6 left)
+[turn 35] Maya plays Blue 3. (4 left)
+[turn 36] Tyler plays Blue Draw 2. (5 left)
+[turn 36] Maya faces a penalty of 2.
+[turn 37] Maya plays Red Draw 2. (3 left)
+[turn 37] Tyler faces a penalty of 4.
+[turn 38] Tyler can't or won't stack and draws the penalty of 4.
+[turn 39] Maya plays Wild Color Roulette. (2 left)
+[turn 40] Tyler names Blue and reveals 2 card(s) until one appears; they keep them all (11 cards).
+[turn 41] Maya plays Wild Color Roulette. (1 left)
+[turn 42] Tyler names Blue and reveals 6 card(s) until one appears; they keep them all (17 cards).
+[turn 43] Maya plays Wild Color Roulette. (0 left)
+[turn 43] GAME OVER after 43 turns: Maya wins (played their last card).

@@ -1,0 +1,43 @@
+[turn 0] Tyler deals. Starting card: Blue 2. Maya goes first.
+[turn 1] Maya plays Wild Draw 6, naming Blue. (6 left)
+[turn 1] Tyler faces a penalty of 6.
+[turn 2] Tyler can't or won't stack and draws the penalty of 6.
+[turn 3] Maya plays Wild Reverse Draw 4, naming Blue. (5 left)
+[turn 3] Direction reverses; Maya now faces a penalty of 4.
+[turn 4] Maya can't or won't stack and draws the penalty of 4.
+[turn 5] Tyler plays Wild Color Roulette. (12 left)
+[turn 6] Maya names Blue and reveals 4 card(s) until one appears; they keep them all (13 cards).
+[turn 7] Tyler plays Blue 8. (11 left)
+[turn 8] Maya plays Wild Reverse Draw 4, naming Blue. (12 left)
+[turn 8] Direction reverses; Maya now faces a penalty of 4.
+[turn 9] Maya can't or won't stack and draws the penalty of 4.
+[turn 10] Tyler plays Blue 2. (10 left)
+[turn 11] Maya plays Blue Draw 2. (15 left)
+[turn 11] Tyler faces a penalty of 2.
+[turn 12] Tyler plays Yellow Draw 2. (9 left)
+[turn 12] Maya faces a penalty of 4.
+[turn 13] Maya plays Green Draw 2. (14 left)
+[turn 13] Tyler faces a penalty of 6.
+[turn 14] Tyler plays Red Draw 2. (8 left)
+[turn 14] Maya faces a penalty of 8.
+[turn 15] Maya can't or won't stack and draws the penalty of 8.
+[turn 16] Tyler plays Red 9. (7 left)
+[turn 17] Maya plays Wild Draw 10, naming Blue. (21 left)
+[turn 17] Tyler faces a penalty of 10.
+[turn 18] Tyler can't or won't stack and draws the penalty of 10.
+[turn 19] Maya plays Blue Skip Everyone. (20 left)
+[turn 19] Everyone else is skipped; Maya goes again.
+[turn 20] Maya plays Wild Draw 6, naming Blue. (19 left)
+[turn 20] Tyler faces a penalty of 6.
+[turn 21] Tyler can't or won't stack and draws the penalty of 6.
+[turn 22] Maya plays Blue Reverse. (18 left)
+[turn 22] Direction reverses.
+[turn 23] Maya plays Green Reverse. (17 left)
+[turn 23] Direction reverses.
+[turn 24] Maya plays Green Skip Everyone. (16 left)
+[turn 24] Everyone else is skipped; Maya goes again.
+[turn 25] Maya plays Green Skip. (15 left)
+[turn 25] Tyler is skipped.
+[turn 26] Maya plays Wild Color Roulette. (14 left)
+[turn 27] Tyler reaches 25 cards and is knocked out by the Mercy rule!
+[turn 27] GAME OVER after 27 turns: Maya wins (last player standing).

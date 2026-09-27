@@ -1,0 +1,37 @@
+[turn 0] Priya deals. Starting card: Yellow 5. Joe goes first.
+[turn 1] Joe plays Yellow 5. (6 left)
+[turn 2] Priya plays Yellow 3. (6 left)
+[turn 3] Joe plays Yellow 0. (5 left)
+[turn 3] Everyone passes their hand to the next player.
+[turn 4] Priya plays Blue 0. (4 left)
+[turn 4] Everyone passes their hand to the next player.
+[turn 5] Joe plays Blue Discard All and discards 0 more Blue card(s). (3 left)
+[turn 6] Priya plays Wild Draw 10, naming Red. (5 left)
+[turn 6] Joe faces a penalty of 10.
+[turn 7] Joe can't or won't stack and draws the penalty of 10.
+[turn 8] Priya plays Red 5. (4 left)
+[turn 9] Joe plays Red 6. (12 left)
+[turn 10] Priya plays Wild Draw 10, naming Green. (3 left)
+[turn 10] Joe faces a penalty of 10.
+[turn 11] Joe can't or won't stack and draws the penalty of 10.
+[turn 12] Priya plays Wild Draw 6, naming Green. (2 left)
+[turn 12] Joe faces a penalty of 6.
+[turn 13] Joe plays Wild Draw 6, naming Green. (21 left)
+[turn 13] Priya faces a penalty of 12.
+[turn 14] Priya can't or won't stack and draws the penalty of 12.
+[turn 15] Joe plays Green 1. (20 left)
+[turn 16] Priya plays Green Draw 4. (13 left)
+[turn 16] Joe faces a penalty of 4.
+[turn 17] Joe plays Green Draw 4. (19 left)
+[turn 17] Priya faces a penalty of 8.
+[turn 18] Priya plays Wild Reverse Draw 4, naming Green. (12 left)
+[turn 18] Direction reverses; Priya now faces a penalty of 12.
+[turn 19] Priya plays Wild Reverse Draw 4, naming Green. (11 left)
+[turn 19] Direction reverses; Priya now faces a penalty of 16.
+[turn 20] Priya plays Blue Draw 4. (10 left)
+[turn 20] Joe faces a penalty of 20.
+[turn 21] Joe plays Red Draw 4. (18 left)
+[turn 21] Priya faces a penalty of 24.
+[turn 22] Priya can't or won't stack and draws the penalty of 24.
+[turn 22] Priya reaches 25 cards and is knocked out by the Mercy rule!
+[turn 22] GAME OVER after 22 turns: Joe wins (last player standing).

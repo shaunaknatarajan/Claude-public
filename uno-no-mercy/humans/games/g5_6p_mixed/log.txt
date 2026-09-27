@@ -1,0 +1,244 @@
+[turn 0] Leo deals. Starting card: Green 9. Maya goes first.
+[turn 1] Maya plays Green 9. (6 left)
+[turn 2] Joe plays Green 0. (6 left)
+[turn 2] Everyone passes their hand to the next player.
+[turn 3] Tyler plays Wild Color Roulette. (5 left)
+[turn 4] Priya names Green and reveals 2 card(s) until one appears; they keep them all (9 cards).
+[turn 5] Sam plays Green 1. (6 left)
+[turn 6] Leo plays Green 5. (6 left)
+[turn 7] Maya plays Green 3. (6 left)
+[turn 8] Joe plays Yellow 3. (5 left)
+[turn 9] Tyler plays Wild Reverse Draw 4, naming Red. (4 left)
+[turn 9] Direction reverses; Joe now faces a penalty of 4.
+[turn 10] Joe plays Green Draw 4. (4 left)
+[turn 10] Maya faces a penalty of 8.
+[turn 11] Maya plays Wild Draw 6, naming Yellow. (5 left)
+[turn 11] Leo faces a penalty of 14.
+[turn 12] Leo plays Wild Draw 10, naming Blue. (5 left)
+[turn 12] Sam faces a penalty of 24.
+[turn 13] Sam can't or won't stack and draws the penalty of 24.
+[turn 13] Sam reaches 25 cards and is knocked out by the Mercy rule!
+[turn 14] Priya plays Blue 4. (8 left)
+[turn 15] Tyler has nothing playable, draws 7 card(s) and must play the Blue 3.
+[turn 15] Tyler plays Blue 3. (10 left)
+[turn 16] Joe plays Blue 1. (3 left)
+[turn 17] Maya plays Blue Draw 4. (4 left)
+[turn 17] Leo faces a penalty of 4.
+[turn 18] Leo can't or won't stack and draws the penalty of 4.
+[turn 19] Priya plays Wild Reverse Draw 4, naming Red. (7 left)
+[turn 19] Direction reverses; Leo now faces a penalty of 4.
+[turn 20] Leo can't or won't stack and draws the penalty of 4.
+[turn 21] Maya plays Wild Color Roulette. (3 left)
+[turn 22] Joe names Red and reveals 4 card(s) until one appears; they keep them all (7 cards).
+[turn 23] Tyler plays Red Draw 4. (9 left)
+[turn 23] Priya faces a penalty of 4.
+[turn 24] Priya can't or won't stack and draws the penalty of 4.
+[turn 25] Leo plays Red 4. (12 left)
+[turn 26] Maya plays Red Skip Everyone. (2 left)
+[turn 26] Everyone else is skipped; Maya goes again.
+[turn 27] Maya has nothing playable, draws 2 card(s) and must play the Red 5.
+[turn 27] Maya plays Red 5. (3 left)
+[turn 28] Joe plays Red Discard All and discards 0 more Red card(s). (6 left)
+[turn 29] Tyler has nothing playable, draws 2 card(s) and must play the Red 6.
+[turn 29] Tyler plays Red 6. (10 left)
+[turn 30] Priya plays Red Discard All and discards 3 more Red card(s). (7 left)
+[turn 31] Leo plays Blue Discard All and discards 3 more Blue card(s). (8 left)
+[turn 32] Maya has nothing playable, draws 4 card(s) and must play the Wild Reverse Draw 4.
+[turn 32] Maya plays Wild Reverse Draw 4, naming Yellow. (6 left)
+[turn 32] Direction reverses; Leo now faces a penalty of 4.
+[turn 33] Leo can't or won't stack and draws the penalty of 4.
+[turn 34] Priya plays Yellow Skip Everyone. (6 left)
+[turn 34] Everyone else is skipped; Priya goes again.
+[turn 35] Priya plays Yellow 8. (5 left)
+[turn 36] Tyler plays Yellow Draw 2. (9 left)
+[turn 36] Joe faces a penalty of 2.
+[turn 37] Joe can't or won't stack and draws the penalty of 2.
+[turn 38] Maya plays Yellow 9. (5 left)
+[turn 39] Leo plays Yellow 2. (11 left)
+[turn 40] Priya plays Wild Reverse Draw 4, naming Green. (4 left)
+[turn 40] Direction reverses; Leo now faces a penalty of 4.
+[turn 41] Leo can't or won't stack and draws the penalty of 4.
+[turn 42] Maya plays Green Draw 4. (4 left)
+[turn 42] Joe faces a penalty of 4.
+[turn 43] Joe can't or won't stack and draws the penalty of 4.
+[turn 44] Tyler plays Green Draw 2. (8 left)
+[turn 44] Priya faces a penalty of 2.
+[turn 45] Priya plays Green Draw 2. (3 left)
+[turn 45] Leo faces a penalty of 4.
+[turn 46] Leo plays Red Draw 2. (14 left)
+[turn 46] Maya faces a penalty of 6.
+[turn 47] Maya can't or won't stack and draws the penalty of 6.
+[turn 48] Joe plays Red 8. (11 left)
+[turn 49] Tyler plays Green 8. (7 left)
+[turn 50] Priya plays Green Skip Everyone. (2 left)
+[turn 50] Everyone else is skipped; Priya goes again.
+[turn 51] Priya plays Green 6. (1 left)
+[turn 52] Leo plays Green 6. (13 left)
+[turn 53] Maya plays Green 7. (9 left)
+[turn 53] Maya swaps hands with Priya.
+[turn 54] Joe plays Green 7. (10 left)
+[turn 54] Joe swaps hands with Tyler.
+[turn 55] Tyler plays Wild Reverse Draw 4, naming Red. (9 left)
+[turn 55] Direction reverses; Joe now faces a penalty of 4.
+[turn 56] Joe can't or won't stack and draws the penalty of 4.
+[turn 57] Maya has nothing playable, draws 1 card(s) and must play the Wild Color Roulette.
+[turn 57] Maya plays Wild Color Roulette. (1 left)
+[turn 58] Leo names Yellow and reveals 3 card(s) until one appears; they keep them all (16 cards).
+[turn 59] Priya plays Yellow Discard All and discards 5 more Yellow card(s). (3 left)
+[turn 60] Tyler plays Wild Color Roulette. (8 left)
+[turn 61] Joe names Yellow and reveals 3 card(s) until one appears; they keep them all (14 cards).
+[turn 62] Maya has nothing playable, draws 4 card(s) and must play the Yellow Reverse.
+[turn 62] Maya plays Yellow Reverse. (4 left)
+[turn 62] Direction reverses.
+[turn 63] Joe plays Yellow 9. (13 left)
+[turn 64] Tyler plays Wild Color Roulette. (7 left)
+[turn 65] Priya names Green and reveals 13 card(s) until one appears; they keep them all (16 cards).
+[turn 66] Leo plays Green 4. (15 left)
+[turn 67] Maya plays Green 0. (3 left)
+[turn 67] Everyone passes their hand to the next player.
+[turn 68] Joe has nothing playable, draws 3 card(s) and must play the Wild Reverse Draw 4.
+[turn 68] Joe plays Wild Reverse Draw 4, naming Red. (5 left)
+[turn 68] Direction reverses; Maya now faces a penalty of 4.
+[turn 69] Maya can't or won't stack and draws the penalty of 4.
+[turn 70] Leo plays Red 6. (15 left)
+[turn 71] Priya has nothing playable, draws 1 card(s) and must play the Wild Reverse Draw 4.
+[turn 71] Priya plays Wild Reverse Draw 4, naming Blue. (7 left)
+[turn 71] Direction reverses; Leo now faces a penalty of 4.
+[turn 72] Leo plays Blue Draw 4. (14 left)
+[turn 72] Maya faces a penalty of 8.
+[turn 73] Maya can't or won't stack and draws the penalty of 8.
+[turn 73] Maya reaches 25 cards and is knocked out by the Mercy rule!
+[turn 74] Joe has nothing playable, draws 1 card(s) and must play the Blue Skip.
+[turn 74] Joe plays Blue Skip. (5 left)
+[turn 74] Tyler is skipped.
+[turn 75] Priya plays Blue Draw 2. (6 left)
+[turn 75] Leo faces a penalty of 2.
+[turn 76] Leo plays Blue Draw 2. (13 left)
+[turn 76] Joe faces a penalty of 4.
+[turn 77] Joe can't or won't stack and draws the penalty of 4.
+[turn 78] Tyler plays Wild Draw 10, naming Red. (12 left)
+[turn 78] Priya faces a penalty of 10.
+[turn 79] Priya can't or won't stack and draws the penalty of 10.
+[turn 79] The discard pile is shuffled into a new draw pile.
+[turn 80] Leo plays Red Draw 2. (12 left)
+[turn 80] Joe faces a penalty of 2.
+[turn 81] Joe can't or won't stack and draws the penalty of 2.
+[turn 82] Tyler plays Wild Color Roulette. (11 left)
+[turn 83] Priya names Green and reveals 2 card(s) until one appears; they keep them all (18 cards).
+[turn 84] Leo plays Green Discard All and discards 2 more Green card(s). (9 left)
+[turn 85] Joe plays Green 8. (10 left)
+[turn 86] Tyler plays Green Skip. (10 left)
+[turn 86] Priya is skipped.
+[turn 87] Leo plays Wild Draw 6, naming Yellow. (8 left)
+[turn 87] Joe faces a penalty of 6.
+[turn 88] Joe can't or won't stack and draws the penalty of 6.
+[turn 89] Tyler plays Yellow Discard All and discards 5 more Yellow card(s). (4 left)
+[turn 90] Priya plays Wild Reverse Draw 4, naming Blue. (17 left)
+[turn 90] Direction reverses; Tyler now faces a penalty of 4.
+[turn 91] Tyler can't or won't stack and draws the penalty of 4.
+[turn 92] Joe plays Wild Reverse Draw 4, naming Red. (15 left)
+[turn 92] Direction reverses; Tyler now faces a penalty of 4.
+[turn 93] Tyler can't or won't stack and draws the penalty of 4.
+[turn 94] Priya has nothing playable, draws 2 card(s) and must play the Red 2.
+[turn 94] Priya plays Red 2. (18 left)
+[turn 95] Leo plays Red Reverse. (7 left)
+[turn 95] Direction reverses.
+[turn 96] Priya plays Blue Reverse. (17 left)
+[turn 96] Direction reverses.
+[turn 97] Leo plays Blue 9. (6 left)
+[turn 98] Joe plays Wild Draw 6, naming Red. (14 left)
+[turn 98] Tyler faces a penalty of 6.
+[turn 99] Tyler can't or won't stack and draws the penalty of 6.
+[turn 100] Priya has nothing playable, draws 2 card(s) and must play the Red Skip Everyone.
+[turn 100] Priya plays Red Skip Everyone. (18 left)
+[turn 100] Everyone else is skipped; Priya goes again.
+[turn 101] Priya has nothing playable, draws 1 card(s) and must play the Red 6.
+[turn 101] Priya plays Red 6. (18 left)
+[turn 102] Leo plays Yellow 6. (5 left)
+[turn 103] Joe plays Yellow 7. (13 left)
+[turn 103] Joe swaps hands with Tyler.
+[turn 104] Tyler plays Wild Color Roulette. (12 left)
+[turn 105] Priya names Blue and reveals 5 card(s) until one appears; they keep them all (23 cards).
+[turn 106] Leo plays Blue 5. (4 left)
+[turn 107] Joe plays Blue 6. (17 left)
+[turn 108] Tyler has nothing playable, draws 3 card(s) and must play the Blue Skip Everyone.
+[turn 108] Tyler plays Blue Skip Everyone. (14 left)
+[turn 108] Everyone else is skipped; Tyler goes again.
+[turn 109] Tyler plays Red Skip Everyone. (13 left)
+[turn 109] Everyone else is skipped; Tyler goes again.
+[turn 110] Tyler plays Red Draw 2. (12 left)
+[turn 110] Priya faces a penalty of 2.
+[turn 111] Priya plays Blue Draw 4. (22 left)
+[turn 111] Leo faces a penalty of 6.
+[turn 112] Leo plays Wild Draw 10, naming Yellow. (3 left)
+[turn 112] Joe faces a penalty of 16.
+[turn 113] Joe can't or won't stack and draws the penalty of 16.
+[turn 113] Joe reaches 25 cards and is knocked out by the Mercy rule!
+[turn 114] Tyler plays Yellow Discard All and discards 2 more Yellow card(s). (9 left)
+[turn 115] Priya plays Yellow 7. (21 left)
+[turn 115] Priya swaps hands with Leo.
+[turn 116] Leo plays Blue 7. (20 left)
+[turn 116] Leo swaps hands with Priya.
+[turn 117] Tyler has nothing playable, draws 2 card(s) and must play the Blue Skip Everyone.
+[turn 117] Tyler plays Blue Skip Everyone. (10 left)
+[turn 117] Everyone else is skipped; Tyler goes again.
+[turn 118] Tyler has nothing playable, draws 2 card(s) and must play the Blue 5.
+[turn 118] Tyler plays Blue 5. (11 left)
+[turn 119] Priya plays Blue 7. (19 left)
+[turn 119] Priya swaps hands with Leo.
+[turn 120] Leo plays Green 7. (18 left)
+[turn 120] Leo swaps hands with Priya.
+[turn 121] Tyler plays Green Draw 4. (10 left)
+[turn 121] Priya faces a penalty of 4.
+[turn 122] Priya plays Yellow Draw 4. (17 left)
+[turn 122] Leo faces a penalty of 8.
+[turn 123] Leo plays Wild Draw 6, naming Yellow. (2 left)
+[turn 123] Tyler faces a penalty of 14.
+[turn 124] Tyler can't or won't stack and draws the penalty of 14.
+[turn 125] Priya plays Yellow Skip. (16 left)
+[turn 125] Leo is skipped.
+[turn 126] Tyler plays Wild Reverse Draw 4, naming Yellow. (23 left)
+[turn 126] Direction reverses; Leo now faces a penalty of 4.
+[turn 127] Leo can't or won't stack and draws the penalty of 4.
+[turn 128] Priya plays Yellow 8. (15 left)
+[turn 129] Tyler plays Yellow Draw 4. (22 left)
+[turn 129] Leo faces a penalty of 4.
+[turn 130] Leo can't or won't stack and draws the penalty of 4.
+[turn 131] Priya plays Yellow 8. (14 left)
+[turn 132] Tyler plays Yellow Skip Everyone. (21 left)
+[turn 132] Everyone else is skipped; Tyler goes again.
+[turn 133] Tyler plays Yellow Draw 2. (20 left)
+[turn 133] Leo faces a penalty of 2.
+[turn 134] Leo plays Yellow Draw 2. (9 left)
+[turn 134] Priya faces a penalty of 4.
+[turn 135] Priya plays Green Draw 2. (13 left)
+[turn 135] Tyler faces a penalty of 6.
+[turn 136] Tyler plays Green Draw 4. (19 left)
+[turn 136] Leo faces a penalty of 10.
+[turn 137] Leo can't or won't stack and draws the penalty of 10.
+[turn 138] Priya plays Green Skip. (12 left)
+[turn 138] Tyler is skipped.
+[turn 139] Leo plays Green Discard All and discards 2 more Green card(s). (16 left)
+[turn 140] Priya plays Green Reverse. (11 left)
+[turn 140] Direction reverses.
+[turn 141] Leo plays Red Reverse. (15 left)
+[turn 141] Direction reverses.
+[turn 142] Priya plays Red 8. (10 left)
+[turn 143] Tyler plays Wild Color Roulette. (18 left)
+[turn 144] Leo names Red and reveals 2 card(s) until one appears; they keep them all (17 cards).
+[turn 145] Priya has nothing playable, draws 1 card(s) and must play the Wild Draw 10.
+[turn 145] Priya plays Wild Draw 10, naming Blue. (10 left)
+[turn 145] Tyler faces a penalty of 10.
+[turn 146] Tyler can't or won't stack and draws the penalty of 10.
+[turn 146] Tyler reaches 25 cards and is knocked out by the Mercy rule!
+[turn 147] Leo plays Blue Discard All and discards 5 more Blue card(s). (11 left)
+[turn 148] Priya plays Blue Draw 2. (9 left)
+[turn 148] Leo faces a penalty of 2.
+[turn 149] Leo plays Red Draw 4. (10 left)
+[turn 149] Priya faces a penalty of 6.
+[turn 150] Priya can't or won't stack and draws the penalty of 6.
+[turn 151] Leo plays Wild Draw 10, naming Red. (9 left)
+[turn 151] Priya faces a penalty of 10.
+[turn 152] Priya can't or won't stack and draws the penalty of 10.
+[turn 152] Priya reaches 25 cards and is knocked out by the Mercy rule!
+[turn 152] GAME OVER after 152 turns: Leo wins (last player standing).

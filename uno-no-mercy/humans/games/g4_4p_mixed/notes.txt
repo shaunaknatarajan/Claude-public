@@ -1,0 +1,58 @@
+== Sam
+  (turn 1) Keeping it simple, no hand-swap shenanigans.
+  (turn 4) Named Red to keep things simple, no drama.
+  (turn 14) Keeping it simple and gentle, no need to pile on anyone.
+  (turn 20) Keeping it simple, just playing a plain number, no reverses or disruption.
+  (turn 35) Went with Yellow Discard All to thin my own hand, nothing aggressive intended.
+  (turn 39) Keeping it gentle, just a plain number.
+  (turn 52) Thinning my hand with Discard All, nothing aggressive toward anyone.
+  (turn 59) Forced into a draw card, picked the smallest one and kept it Red to stay simple.
+  (turn 62) Forced into a Wild Draw, picked the smaller Draw 6 to keep things gentle, kept it Red to stay simple.
+  (turn 65) Forced to play the Wild Draw 10, named Green since that's what fills my hand now - didn't target Tyler, he's the one near 25.
+  (turn 68) Played a plain Green 5, nothing aggressive, keeping it simple with just Leo and me left.
+  (turn 70) Playing plain Green 6, staying gentle with Leo at 2 cards.
+  (turn 74) Leo's not near 25, playing Reverse to go again rather than pile a Draw 2 penalty on him.
+  (turn 80) Roulette to avoid piling a fixed draw penalty on Leo, keeping it gentle
+  (turn 82) Forced to play the Wild Reverse Draw 4, named Red since that's most of my hand now - not trying to target Leo, just clearing my hand gently.
+  (turn 89) Taking 12 would knock me out at 21+12=33, so I have to stack even though I don't love escalating. Naming Blue to keep it simple, not targeting Leo maliciously.
+== Leo
+  (turn 2) Skipped Zoe to slow her down. Keeping Wild RD4 and Roulette in reserve as defense/utility.
+  (turn 5) Kept Wild RD4 and Roulette in reserve as defense; played Red 0 to stay flexible.
+  (turn 15) Swapped for Zoe's 3-card hand while dumping Yellow 7. Big win if it sticks.
+  (turn 23) Naming Yellow off the WD6 since I'm loaded with yellow (3,7,Skip,Discard All) - want to dump that color fast.
+  (turn 34) Dumped all blue with Discard All - cuts my hand fast without attacking Zoe who's near 25.
+  (turn 38) Dumping duplicate Green 6, saving Draw 2 and Reverse for defense/utility. Zoe still huge at 16 cards.
+  (turn 42) Sam down to 2 cards - danger. Skip Everyone buys me another turn to find an answer before Sam wins.
+  (turn 43) Sam at 2 cards is the real threat - hitting with Red Draw 2 to slow them before they go out.
+  (turn 47) Stacked YD4 onto pending penalty, pushing it to Tyler. Keeping Green Draw 2/Reverse in reserve; still watching for whoever gets close to going out.
+  (turn 50) Named Blue for roulette since I hold zero blue - avoids piling more Green onto my already-long Green stack.
+  (turn 56) Named Red - I'm longest there (5 cards) and want to keep dumping it; also zero blue so avoiding that.
+  (turn 66) Stacked WD10 naming Green onto Tyler at 22 cards - could knock him out. Keeps me flexible in Green which I'm long in.
+  (turn 69) Dumping all my Green with Discard All - I'm long there, clears my hand fast.
+  (turn 73) Named Green again for roulette - it's been the hot color all game, figure the draw pile's still loaded with it so I keep the reveal short.
+  (turn 76) Stacked Green Draw 4 to push a 6-card penalty onto Sam - I'm down to just the Blue Draw 2, one card from winning.
+  (turn 78) Naming Blue on the WRD4 since with 2 of us left the reverse boomerangs back on me and I can't stack (my only card left is Blue Draw 2, too low). Naming Blue means once I eat the 4-card penalty, my Dra
+  (turn 81) Naming Green again, still the hot color per my tally - want a short reveal and more cards to work with since I'm down to 5.
+  (turn 84) WD10 naming Blue - I'm loaded with Blue cards to dump next, and hits Sam hard while I keep my WRD4s in reserve to defend.
+  (turn 86) Sam's at 21, one draw from knockout. Playing WRD4 naming Blue - it boomerangs to me but I've got a second WRD4 to stack and push it right back, could finish Sam off.
+  (turn 87) Stacked second WRD4 naming Blue to boomerang the 8-penalty onto Sam at 21 cards - could knock him out or close.
+  (turn 88) No WRD4 left to stack, only my Blue Draw 4 - stacking it pushes the 12-card penalty to Sam, no reverse this time so it should stick on him.
+== Zoe
+  (turn 6) Kept the Wild Reverse Draw 4 in my hand - don't want to pile a big penalty on Tyler this early, want the game to run long.
+  (turn 12) Played the Wild Reverse Draw4 to pad Tyler's tiny 3-card hand instead of doing a risky swap - keeps him and the game going longer.
+  (turn 22) Naming Red for the roulette - keeps me busy drawing without hurting anyone else, game stays alive.
+  (turn 26) Naming Red again for roulette - safe pick, keeps me busy without hurting others, game stays alive.
+  (turn 29) Playing Red 9, plain number card - no penalties, keeps the game rolling without hurting anyone. Watching Tyler's 21-card hand, don't want to be the one who pushes him near 25.
+  (turn 37) My hand is dangerously close to 25 - playing Green Discard All to dump green cards and save myself, doesn't hurt anyone else.
+  (turn 41) Naming Red again - safe pick, keeps me drawing without hurting anyone, game stays alive.
+== Tyler
+  (turn 3) roulette for chaos, let's see the flip
+  (turn 7) named Blue for the roulette flip, just wanna see cards fly
+  (turn 11) swapped my monster 18-card hand for Sam's tiny 3! chaos AND smart, love it
+  (turn 17) Reverse Draw 4 naming Red, I've got a pile of red to keep the chaos going next turn
+  (turn 21) roulette again, love watching cards fly out
+  (turn 28) Swapped my 5 for Sam's 21 - dude is one card from mercy, let's see the fireworks
+  (turn 36) dumped green discard all, wanna keep the chaos train rolling
+  (turn 45) keeping red reverse in hand for chaos later, gotta dump draw cards to keep Sam near mercy
+  (turn 51) swapping with Leo who just hoarded 7 from roulette, let's see what chaos I inherit
+  (turn 58) skip Leo, he's hoarding cards, keep the pressure on

@@ -1,0 +1,63 @@
+== Zoe
+  (turn 5) Keep it light, just play the Yellow 6, save wilds for later.
+  (turn 13) Played Yellow Skip to keep things gentle, saving wilds for later.
+  (turn 16) Went with gentle Wild Color Roulette instead of Draw 6 to avoid piling penalties on Zelda; still holding Draw 6 and Red cards for later.
+  (turn 20) Zed's down to 2 cards, didn't want to risk Draw 6 chain landing on them - went gentle with Roulette again.
+  (turn 26) Forced to play Draw 6, hits Zara who has 18 cards so no knockout risk. Naming Yellow since it's live.
+  (turn 37) Avoided Discard All since my hand is all Red - would've dumped 3 cards at once. Skip Everyone is harmless and keeps things going.
+  (turn 38) Avoided Discard All - would've dumped my other Red card too and left me at 1 card, too close to winning/ending it. Reverse is gentle.
+  (turn 50) Kept it gentle with Red 2, avoided wilds that could knock out Zach at 2 cards.
+  (turn 55) Kept it gentle with Red 8, avoided Draw 2 that could hit Zia at 2 cards.
+  (turn 65) Kept it gentle with Blue 0, avoided Draw 2 stacking risk with Zia at 1 card.
+== Zara
+  (turn 6) Keeping it gentle, no Wild Draw 10 nastiness yet
+  (turn 15) Took the +4 rather than stack Wild Draw 10 - don't want to blast Zoe with 14 cards, keeps things gentle
+  (turn 21) Named Yellow on roulette, hoping for a small pickup
+  (turn 27) Taking +6 myself would put me at 24, one shy of mercy - too risky. Stacking the Draw 6 onto Zed instead; he's only got 2 cards so 6 more won't knock him out, just slows him down gently.
+  (turn 33) Went gentle with Yellow Skip, no need to draw-pile anyone right now
+  (turn 45) Zed at 20 cards, near mercy - staying gentle, played Red Skip instead of any draw cards
+  (turn 49) Zelda down to 2, staying gentle - just playing Red 0, no attacks or skips needed
+  (turn 54) Zach at 2 cards, keeping it gentle with Red 0 instead of any draw attack
+  (turn 60) Zia at 1 card, Zed low too - staying gentle with plain Green 6, no attacks
+== Zed
+  (turn 1) Keep it gentle, play the harmless Yellow 2, save my nasty cards for later
+  (turn 7) Discard All is the gentlest legal move here - no draws forced on anyone, keeps the game rolling
+  (turn 14) Forced to play the nasty wild reverse draw4, hate it, named Green to spread it thin
+  (turn 44) Took the +6 myself rather than stacking Wild Draw 10 onto Zara (16 cards, close to mercy) - keep everyone in the game
+  (turn 48) Played harmless Blue 0, avoiding the nasty wilds and skips - Zoe has only 2 cards, don't want to slow her down or hurt anyone
+  (turn 53) Just a +2, take it myself rather than stacking nasty wilds - keep it gentle
+  (turn 59) Took the +2 myself again, Zia is at 1 card so I don't want to stack anything nasty near her
+  (turn 67) Just take the +2 again, keep things gentle, nobody near mercy needs stacking on them.
+== Zia
+  (turn 23) kept it Yellow to keep the pile matching my hand, just having fun
+  (turn 34) Named Red since my hand is red-heavy, want to keep low players stocked with playable cards, not knock anyone out
+  (turn 43) Named Red again - big red hand, keeps things playable for everyone, esp low-card players like Zoe
+  (turn 47) Avoided Draw 2 to not hurt Zed (near knockout) or anyone; played Blue 5 to keep things gentle.
+  (turn 52) Avoided Wild Reverse Draw 4 - would've hit Zach who only has 2 cards, too risky. Red Draw 2 hits Zed who has plenty of cards.
+  (turn 68) Zach's on UNO - didn't want to hit him or anyone with a draw. Playing the gentle Discard All instead, keeps the game rolling.
+== Zach
+  (turn 3) Named yellow, matches my hand
+  (turn 9) Played Reverse to keep things gentle, no one draws
+  (turn 11) Avoided the draw-4, no one gets knocked around
+  (turn 18) Forced to play the draw4, naming Yellow since I've got a yellow-heavy hand to keep playing smooth. Reverse should send the penalty back to Zelda who has plenty of cards to absorb it.
+  (turn 24) Playing low Yellow 1, keeping the game going gentle, saving Skips for later
+  (turn 30) Zoe's down to 2, don't want to skip her or anyone - just play the plain 6 and keep it moving gently.
+  (turn 42) Playing plain Green 4, keeping it gentle, avoid draw2/wild drama.
+  (turn 57) Swapped with Zelda (biggest hand) to avoid dumping my huge hand on someone small like Zia.
+  (turn 63) Zia's on UNO - avoiding skips/draws near her, just reversing gently to keep things calm.
+== Zelda
+  (turn 4) Keeping it gentle, no swaps, saving my wild draw4 for emergencies
+  (turn 12) Named Yellow on roulette, keeping things gentle
+  (turn 17) Named Green on roulette, keeping color stable and gentle
+  (turn 19) Taking the penalty myself rather than passing it on - keep the game gentle and everyone in it.
+  (turn 25) Avoided swaps, played Green 1 to keep things gentle, no one gets hurt
+  (turn 31) Avoided swaps again, playing Yellow Draw 2 - gentle penalty, keep everyone in.
+  (turn 36) Gentle as always, no penalties, keeping everyone in the game
+  (turn 39) Skip Everyone hurts no one's hand, gentlest option here - keep everyone in
+  (turn 40) Skip Everyone again - no one draws, everyone stays in. Gentle as ever.
+  (turn 41) Gentle Green 2, no penalties, no swaps - keep it easy for everyone, especially watching Zoe's 2 cards
+  (turn 46) Blue Skip - gentlest option, no penalties dealt out, keep everyone in especially Zoe at 2 cards
+  (turn 51) Red Skip, gentlest - no draws, keep everyone in, watching Zach's 2 cards
+  (turn 56) Green 8, gentlest - avoiding swaps and draws, Zia only has 2 cards
+  (turn 62) Blue 8, no swap no draw, everyone stays happy. Zia still at 1 card, watching them.
+  (turn 64) Blue 1, gentlest - no penalties, no swaps. Zia still at 1 card, watching closely.

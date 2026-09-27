@@ -1,0 +1,78 @@
+== Zoe
+  (turn 1) Keep it going - avoid Discard All, it empties my hand too fast.
+  (turn 9) Named Blue since I have Blue 3/6/7 to keep playing gently.
+  (turn 13) Kept it simple, no swap - want to keep everyone playing
+  (turn 17) Playing Blue 6, saving Blue 7 for later. No swaps, keep it easygoing.
+  (turn 23) Avoided Discard All again, played Skip instead to keep hand size steady.
+  (turn 32) Named Green to draw more cards and avoid winning too fast - want to keep the game going for everyone.
+  (turn 38) Zia's low on cards (4) - tossing a gentle Draw 2 her way to keep her in the game longer, not the big Draw 4.
+  (turn 42) Playing gentle Green 5, no penalties - keeping everyone in the game.
+  (turn 46) Zia's been hit hard twice already, no more penalties from me - just a gentle Skip to keep things moving
+  (turn 51) Reverse Draw4 hits Zara who has the most cards (10), gentler than hitting low Zia. Avoided Discard All to keep my own hand from shrinking too fast.
+  (turn 55) Hitting Zara (14 cards, most in hand) with Draw 4, not Zia who's low at 5. Keeping direction steady so Zia doesn't get hit.
+  (turn 59) Forced to play Wild Reverse Draw4 - all my other cards don't match Yellow. This will hit Zara (22 cards) and might knock her out at 26 - hate that, but no choice. Named Yellow to keep it simple/neutra
+  (turn 63) Forced Wild Reverse Draw4 again, hate that it flips onto Zia who's already low at 4 - but no choice of cards. Named Yellow to keep it neutral as always.
+  (turn 69) Playing gentle Green 9, avoiding the Draw 4 to keep Zia and Zed in the game.
+  (turn 77) Zed's at 2 cards - definitely not hitting them with Draw2 or Reverse Draw4. Playing gentle Blue 0, keeping the game alive for everyone.
+  (turn 87) Swapped with Zed to avoid emptying my hand too fast and avoid hitting anyone with the draw4.
+  (turn 92) Zed close to winning at 2 cards - not hitting anyone, just playing gentle Blue 4 to keep the game going.
+  (turn 95) Zed's at 1 card (UNO), Zia at 9. Not stacking Draw10 onto anyone - just taking the +2 myself to keep it gentle.
+== Zara
+  (turn 2) Forced Wild Draw 10, no other option. Hate that it hits Zed hard but nothing I can do - named Red since I've got a couple reds to work with.
+  (turn 6) Kept it simple with Red 2 - didn't want to swap hands and mess with Zoe's small pile or take Zed's huge one.
+  (turn 14) Kept it simple again, just Blue 3. Didn't want to swap and shrink my hand or mess with Zoe's small pile.
+  (turn 18) Zoe's low and Zed's stacked way up - swapping would mess with someone's pace. Just playing Blue 9 to keep it going smooth.
+  (turn 21) Avoided the swap options and Discard All - didn't want to mess with anyone's pace or dump cards. Yellow Skip keeps it simple.
+  (turn 27) Zoe's on UNO - definitely not touching Discard All right now, don't want to help end it. Simple Yellow 9.
+  (turn 37) Just keeping it simple with Green 3, no need to overthink.
+  (turn 41) Named Green to keep things steady, matches my hand too.
+  (turn 48) Kept it gentle with Red Skip, avoided the big draw wilds - don't want to pile penalties on anyone.
+  (turn 52) Took the +4 myself rather than stacking bigger draws - don't want to pile penalties on the others, keeps the game going longer.
+  (turn 56) Taking the +4 again rather than stacking Draw 10 - don't want to pile a huge penalty on Zed/Zia/Zoe, keeps everyone in it longer.
+  (turn 58) Taking the +4 again, keeping it gentle, game's already dragging but I don't want to pile on Zoe/Zia/Zed.
+  (turn 60) Taking the +4 again, 22 cards is scary but I still won't pile draws on Zed/Zia/Zoe.
+== Zed
+  (turn 7) Zia's hand is getting small (6) - gentle Draw 2 to keep her in the game longer. Avoiding the Discard All / Draw 4 options, too harsh, don't want to knock anyone out.
+  (turn 11) Keeping it gentle - no Draw 4s or Discard Alls, just playing Blue 8 to keep everyone in the game.
+  (turn 15) Staying gentle, just Blue 1, no penalties, keep everyone in the game.
+  (turn 19) Gentle Blue 2, still avoiding Draw 4s/Discard Alls to keep everyone in longer.
+  (turn 24) Gentle Yellow Draw 2 on Zia, still avoiding Draw 4s/Discard Alls to keep everyone in longer.
+  (turn 28) Zoe at UNO, avoided all penalty cards, just Reverse to pass the turn along gently.
+  (turn 30) Zoe at UNO - stayed gentle with Red 4, no penalties, don't want to knock anyone out.
+  (turn 36) Gentle Green 1, still avoiding Draw 4s/6s/Discard Alls, want everyone to stay in the game.
+  (turn 40) Forced into wilds again, picked Color Roulette over Draw 4/6 to avoid piling penalties on anyone.
+  (turn 44) Forced wild, picked Reverse Draw 4 (lower penalty) over Draw 6, named Red to unload my red pile later.
+  (turn 47) Stuck with reds/wilds again, picked gentle Reverse - no penalties, just passing the turn along.
+  (turn 50) Gentle Skip again, still hoarding the Draw 4/6/Discard All to keep everyone in longer.
+  (turn 53) Forced into a penalty-ish card again but Discard All doesn't hurt anyone directly, just clears my reds - keeping the table alive.
+  (turn 57) Forced wild again, named Yellow to set up my own hand later. Hate that this hits Zara's penalty since she's already at 18 - hope she stacks.
+  (turn 61) Played gentle Yellow 8, no penalties, keeping the table alive.
+  (turn 68) Gentle Green 3, no penalties - keeping Zoe (4 cards) and Zia safe, still sitting on Draw10/Roulette/Discard All as emergency stack options
+  (turn 71) Taking the +4 myself, keeps my hand fat and nobody else gets hurt - just how I like it.
+  (turn 74) Zoe's down to 2 cards - skipping her to buy the table more time before anyone wins.
+  (turn 76) Zoe's at 2 cards, too close to winning - swapping hands with her keeps the game going a bit longer.
+  (turn 82) Zoe at 2 cards, playing gentle Yellow 3, no penalties, hoping she doesn't win too fast but not sabotaging her either
+  (turn 85) Gentle Yellow Reverse, no penalties, just keeping the table going a bit longer.
+  (turn 88) Playing Wild Reverse Draw4 naming Blue since I hold Blue Draw2s to stack later if needed; reverse sends the +4 to Zoe at 6 cards, not too dangerous for her.
+  (turn 91) Zoe at 2 cards again, swapping to keep her from winning too soon.
+== Zia
+  (turn 12) Keep it simple, no skips - don't want to slow Zoe down, just keep the game rolling.
+  (turn 16) Still avoiding skips, want everyone drawing this out.
+  (turn 22) Avoiding the Skip Everyone again - just want this game to keep going for everyone.
+  (turn 31) Zoe's on UNO - roulette might load her up with cards and keep the game going longer.
+  (turn 43) Avoiding the Skip, everyone's hands are big now - roulette really loaded Zara up. Keep it going.
+  (turn 49) Playing Red 9, no disruption - keep it simple and keep everyone in.
+  (turn 54) Zed's hand is smallest at 5 - swapping tops him up gently so he doesn't finish too soon, keeps the game going.
+  (turn 62) Simple Yellow 2, no disruption, keep the game rolling for everyone.
+  (turn 64) Stacking WD6 naming Yellow to keep pace with the table color, pushing the penalty to Zed - keeps the game alive, not aimed at knocking anyone out.
+  (turn 67) Naming Green for the roulette - my hand's getting small, wouldn't mind topping up a bit to keep myself in the game longer.
+  (turn 70) Green Draw 4 to Zed, not Zoe - Zoe's hand is small (3), don't want to push her out or drown her either. Zed's got plenty to absorb it.
+  (turn 73) Taking the penalty myself rather than pushing it onto Zoe (only 2 cards) or reversing onto her - keeps the game going without knocking anyone out.
+  (turn 75) Swapping with Zed not Zoe - Zoe's only got 2, don't want to hand her a near-win or risk emptying myself either. Zed's got plenty to trade.
+  (turn 78) Skip Everyone is harmless - no one draws, no hands pass, keeps things rolling gently without risking Zoe's small hand or my own.
+  (turn 79) Another Skip Everyone - stalling harmlessly again, same logic as before.
+  (turn 80) Red Skip Everyone - keep stalling harmlessly, my hand's getting a bit low though, might need to top up soon.
+  (turn 81) Simple Red 3, no disruption - don't want to reverse and dump a Draw 4 on Zoe with her tiny hand.
+  (turn 84) Simple Yellow 2, no swaps or disruption - just keep the game moving, my hand's fine for now.
+  (turn 86) Yellow 0, everyone passes hands - harmless shuffle, keeps game going without knocking anyone out.
+  (turn 90) Blue 0, simple and harmless - Zed only has 2 cards, don't want to risk hitting him with a draw or swap, just keep it gentle.
