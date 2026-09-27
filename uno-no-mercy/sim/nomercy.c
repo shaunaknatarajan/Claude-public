@@ -664,7 +664,11 @@ static int choose_play(Game *G, int p, const int *opts, int n, int allow_draw) {
     int pol = G->pol[p];
     if (pol == POL_COLLUDE) return collude_play(G, p, opts, n);
     if (pol == POL_MCWIN) return mcwin_play(G, p, opts, n);
-    if (IS_PERSONA(pol)) return persona_play(G, p, opts, n);
+    if (IS_PERSONA(pol)) {
+        // house rule -voluntary_draw 1: a staller declines to play when its hand is small
+        if (allow_draw && persona_of(pol)->stall && G->hsize[p] <= 4) return -1;
+        return persona_play(G, p, opts, n);
+    }
     if (pol == POL_RANDOM) return opts[rng_below(G->rng, n)];
     if (pol == POL_RANDOMV) {
         if (allow_draw) {
