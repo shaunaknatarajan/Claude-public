@@ -2,21 +2,31 @@
 
 # T1: Foundations. UNO Show 'Em No Mercy as a finite stochastic game
 
+**Revision note.** Two referees found no failing theorem and asked for minor fixes. This version applies them:
+- $T$ now counts TURN and RCOL states, so a Roulette victim's colour-naming and reveal is a turn, as in [R§6] and the current simulator (§2.3). Lemma 3 is restated for this count: a turn has at most 25 micro-steps, and $T\le M\le25T$. The Bellman remark after Theorem B and the §7 figures are updated to match. Figures under the old count are labelled as coming from the first build.
+- The state space is the reachable set, $S:=R$, so every state has an action set and a kernel (§2.2, §2.3, §5.1).
+- Theorem A: $\mathcal G_0$ now includes the order of the deal and the opening flip, and the reshuffle step is stated event-wise.
+- Corollary A2's code audit has been redone against the current `sim/nomercy.c`. `mcwin` is covered by a conditional-independence argument, and `-adv_nature` is excluded.
+- Corollary A3 now says the state list is sufficient, not minimal.
+- Corollary C2 and §7 no longer refer to the removed `prolong` policy. `collude`, `mcwin` and `grudge` are finite-memory policies (Cor. C1), not stationary ones.
+- Lemma 3(b′): a span from one TURN state to the next has at most 48 micro-steps and 47 draws.
+- Overstatements about information structures are corrected (§0, Thm B(B), §5.5, §5.6, Prop. B3, §8).
+
 **Conventions.**
 - $N\in\{2,\dots,6\}$ is the number of seats, fixed throughout.
 - Rules are the defaults of `uno-no-mercy/RULES.md`, cited as [R§k]. For example, [R§3.2] is §3 item 2, and [R§4 Roulette] is the Roulette row of the §4 table.
-- There is no turn cap. A *turn* is as defined in [R§6]. $T\in\{1,2,\dots\}\cup\{\infty\}$ is the number of turns until the game ends.
+- There is no turn cap. A *turn* is as defined in [R§6], formalised in §2.3. $T\in\{1,2,\dots\}\cup\{\infty\}$ is the number of turns until the game ends.
 - A *profile* is a joint rule for all decision makers, possibly colluding.
 
 ## 0. Status at a glance
 
 | Part | Claim | Status |
 |---|---|---|
-| (d) | No deadlock. At least 23 cards are always drawable. Every draw run is at most 24 cards. Every turn is at most 49 micro-steps. | **Proven** (Thm D) |
+| (d) | No deadlock. At least 23 cards are always drawable. Every draw run is at most 24 cards. Every turn is at most 25 micro-steps. | **Proven** (Thm D) |
 | (a) | Finite controlled Markov model. Hidden, uniformly random pile order implies each drawn card is uniform over the current effective pile, given everything the decision makers know. This holds across reshuffles and set-aside cards. | **Proven** (Thm A) |
 | (b) | Attractor/safety dichotomy with explicit constants $E[T]\le K\cdot165^{K}$ | **Proven** (Thm B). *Which* alternative holds is **not** decided here. |
 | (b) | The task's constant $E[T]\le K/\varepsilon$ (from $P(T>nK)\le(1-\varepsilon)^n$) | **False in general.** Corrected to $K/\varepsilon^K$ (§5.5). |
-| (b) | Information structures covered. Clairvoyant (deck-order-aware) profiles are excluded, but they satisfy the dichotomy on an enlarged model, with $C'\supseteq\mathrm{lift}(C)$. | **Proven** (§5.6, Prop B3). "$C=\varnothing$ but $C'\neq\varnothing$" is **open**. |
+| (b) | Information structures covered. Clairvoyant (deck-order-aware) profiles are excluded. Those that see the current pile order, but not the outcome of future reshuffles, satisfy the dichotomy on an enlarged model, with $C'\supseteq\mathrm{lift}(C)$. | **Proven** (§5.6, Prop B3). Profiles that also foresee reshuffles are not covered. "$C=\varnothing$ but $C'\neq\varnothing$" is **open**. |
 | (c) | Stationary or finite-memory profiles: $E[T]<\infty\iff P(T<\infty)=1\iff$ termination is reachable from every reachable state. Geometric tails in that case. | **Proven** (Thm C) |
 | (c) | Uniformly random play: $E[T]<\infty$ iff "no trap" | Equivalence **proven**. "No trap" (Conj. E) is **open**, with strong numerical support. |
 
@@ -69,7 +79,7 @@ The finer model that keeps them separate is also finite and Markov, by the same 
 
 ### 2.2 Actions and transitions
 
-Every state has a finite action set $A(s)$ and a kernel $p(\cdot\mid s,a)$. At decision states the successor is deterministic. Chance states have $A(s)=\{*\}$.
+The rules below give a finite action set $A(s)$ and a kernel $p(\cdot\mid s,a)$ at every state of $\mathfrak G_N$. The state space is the reachable set $S:=R$ (§2.3). Theorem D checks that the rules are well defined there. At decision states the successor is deterministic. Chance states have $A(s)=\{*\}$.
 
 **Play $t$ by $p$.**
 1. Remove one $t$ from $H_p$, put the old $\tau$ into $X$, and set $\tau:=t$.
@@ -127,7 +137,21 @@ The initial law $\mu_0$ [R§2]:
 
 The flip always succeeds: at most $7N\le42$ number cards are dealt, so at least $80-42=38$ number cards remain in the pile.
 
-Define $M:=\tau_F=\inf\{n:s_n\in F\}$, the number of micro-steps. Define $T:=\#\{n<\tau_F:\varphi(s_n)=\mathsf{TURN}\}$. This is exactly [R§6]: Skip Everyone and 2-player go-agains are separate turns, and skipped players get none. It is also what `sim/nomercy.c` counts in `take_turn`.
+**State space.** $R$ is the set of tuples of §2.1 that can be reached from $\operatorname{supp}\mu_0$ by legal actions and positive-probability draws. The state space of $\mathfrak G_N$ is $S:=R$. By definition it is closed under successors. It is finite by Lemma 2, and by Theorem D the rules give a nonempty $A(s)$ and a successor law at every $s\in S\setminus F$. Tuples that are not reachable, such as $p\notin A$ or a chance phase with $D^*=\varnothing$, are not states of the model, so no action set or kernel is needed for them.
+
+**Turn count.** Define $M:=\tau_F=\inf\{n:s_n\in F\}$, the number of micro-steps, and
+
+$$T:=\#\{n<\tau_F:\varphi(s_n)\in\{\mathsf{TURN},\mathsf{RCOL}\}\}.$$
+
+This is the turn count of [R§6]:
+- A TURN state starts an ordinary turn of seat $p$: a play, a stack, an accept, or a draw-until-playable.
+- An RCOL state starts a Wild Colour Roulette victim's turn: the victim names a colour and then reveals cards (REV).
+- Skip Everyone and 2-player go-agains are separate TURN states, and skipped players get none.
+- A Roulette that is its player's last card wins at once (Play, step 3). No RCOL state follows, so the victim gets no turn.
+
+This is also what the current `sim/nomercy.c` counts. It adds 1 to `G->turns` once per call of `take_turn` (a TURN state), and once in the Roulette case of `play_card`, after the last-card check (an RCOL state).
+
+Earlier versions of this document, and the first build of the simulator (results in `results/crosscheck_v1/`), used $T^\circ:=\#\{n<\tau_F:\varphi(s_n)=\mathsf{TURN}\}$ instead. This leaves out the victim's turn. An RCOL state is entered only through a Roulette play, and it is followed by REV and then TURN or END. So each span from one TURN state to the next contains at most one RCOL state, and $T^\circ\le T\le2T^\circ$. Hence every finiteness and tail statement below for $T$ holds for $T^\circ$ as well.
 
 ### 2.4 Invariants, finiteness, short turns
 
@@ -159,7 +183,7 @@ Initially every hand has 7 cards.
 - Hence the Draw Cards that build one stack are distinct physical cards, and $\sigma\le152$.
 - Chance phases arise only from TURN with $\sigma=0$, from accept (which sets $\sigma=0$), or from a Roulette. A Roulette is playable only at $\sigma=0$, because $dv(\mathrm{WCR})=0$. $\square$
 
-**Lemma 2 (finiteness).** Count as follows:
+**Lemma 2 (finiteness).** $S=R$ is contained in the product set of all tuples of §2.1. Count that set as follows:
 - The copies of each type are placed among $N+2$ locations ($N$ hands, $D$, $X$).
 - Multiply by 68 top types, $2^N$ active sets, 4 colours, $N$ seats, 2 directions, 153 values of $\sigma$, 5 values of $v$, and 162 phases.
 
@@ -169,23 +193,28 @@ $$|S|\le 68\cdot2^N\cdot4N\cdot2\cdot153\cdot5\cdot162\prod_t\binom{m(t)+N+1}{N+
 
 The bound is $10^{85.1}$, $10^{99.4}$, $10^{111.5}$, $10^{121.9}$, $10^{131.0}$ for $N=2,\dots,6$ (computed exactly), so $|S|<10^{132}$.
 
-**Lemma 3 (short runs and turns).**
-- (a) Any maximal run of consecutive draws by one player (a DRAW sequence, a penalty, or a Roulette reveal) has at most 24 draws.
-- (b) Every turn (the micro-steps from a TURN state up to the next TURN state or END) has at most 49 micro-steps.
-- (c) Hence $T\le M\le49T$, and $M=\infty\iff T=\infty$.
+**Lemma 3 (short runs and turns).** A *turn* is the run of micro-steps from a TURN or RCOL state up to, but not including, the next TURN or RCOL state or END.
+- (a) Any maximal run of consecutive draws by one player (a DRAW sequence, a penalty, or a Roulette reveal) has at most 24 draws. If it ends without a knockout, it has at most 23.
+- (b) Every turn has at most 25 micro-steps, of which at most 24 are draws.
+- (b′) Consider the span from a TURN state up to the next TURN state or END: a turn, together with the Roulette victim's turn it may trigger. Earlier versions of this document called this span a turn. It has at most 48 micro-steps, of which at most 47 are draws. The bound of 49 stated there is valid but not tight.
+- (c) Hence $T\le M\le25T$, which implies the earlier $M\le49T$, and $M=\infty\iff T=\infty$.
 
-*Proof.* (a) By (I3) the drawer holds at least 1 card when the run starts. Each draw adds one card, and reaching 25 knocks the drawer out, which ends the run.
+*Proof.* (a) By (I3) the drawer holds $h\ge1$ cards when the run starts. Each draw adds one card, and reaching 25 knocks the drawer out, which ends the run. So the run has at most $25-h\le24$ draws. Without a knockout the hand ends with at most 24 cards, so there are at most $24-h\le23$ draws.
 
-(b) Enumerate the cases from TURN:
-- stack a coloured card: 1 step;
-- stack a wild: 2 steps (TURN, WCOL);
-- accept: $1+\le24$ steps;
-- play: 1, plus at most 1 for WCOL, SWAP or RCOL, plus at most 24 REV draws;
-- nothing playable: at most 24 draws (the first is the TURN step), then at most 1 decision, then at most 24 REV draws.
+(b) Enumerate the cases by the first state of the turn:
+- TURN, stack or play a coloured card other than a 7, or play a Roulette: 1 step. The next state is TURN, RCOL or END.
+- TURN, stack or play a wild Draw Card, or play a 7: 2 steps (then WCOL or SWAP).
+- TURN, accept: 1 step, then at most 24 PEN draws.
+- TURN, nothing playable: a draw run whose first draw is the TURN step.
+  - If the run ends in a knockout, the turn is at most 24 draws.
+  - Otherwise the run has at most 23 draws, by (a), and ends with the forced play. At most 1 decision (WCOL or SWAP) follows. If the card is a Roulette, the next state is RCOL, which starts a new turn.
+- RCOL: 1 decision, then at most 24 REV draws.
 
-The maximum is $24+1+24=49$.
+The maximum is $1+24=25$. Every turn contains at most one draw run, so it has at most 24 draws.
 
-(c) Each turn contains at least 1 and at most 49 micro-steps, and every micro-step before absorption belongs to a turn. $\square$
+(b′) By §2.3 a span contains at most one RCOL state, and it is reached only through a Roulette play. A span without one is a single turn. If the Roulette is played from the hand, the span has at most $1+1+24=26$ steps. If the Roulette is the forced play ending a draw run, that run ends without a knockout and has at most 23 draws, by (a). The span then has at most $23+1+24=48$ steps and $23+24=47$ draws.
+
+(c) $s_0$ is a TURN state, so every micro-step before absorption belongs to exactly one turn. Each turn contains at least 1 and at most 25 micro-steps. $\square$
 
 ## 3. (d) No deadlock
 
@@ -193,7 +222,7 @@ The maximum is $24+1+24=49$.
 - **(i)** $A(s)\neq\varnothing$.
 - **(ii)** If $s$ is a chance state, then $D^*\neq\varnothing$. In fact $|D|+|X|=167-\sum_{q\in A}|H_q|\ge167-24|A|\ge23$, and $|D^*|\le165$.
 - **(iii)** nx, the victim, and the set of swap targets are well defined.
-- **(iv)** Every draw run ends within 24 draws, and every turn within 49 micro-steps.
+- **(iv)** Every draw run ends within 24 draws, and every turn within 25 micro-steps.
 
 Hence the rules define a unique successor distribution at every reachable non-terminal state. All its successors again satisfy (I1)–(I4).
 
@@ -229,7 +258,16 @@ Randomness is carried by the following objects, all mutually independent:
 
 The $j$-th reshuffle, if it shuffles the set $Z$, uses $\Pi_{j,Z}$.
 
-Let $\mathcal G_n:=\sigma(\delta,\hat s_0,\dots,\hat s_n,\xi_0,\dots,\xi_n)$. This is the entire past of the game at card level: every hand of every player, the discard and set-aside contents, physical identities, all past actions (functions of these) and all coins. A profile is **non-anticipating** if each action $a_n$ (a labelled card, a colour, or a target) is $\mathcal G_n$-measurable. This dominates every coalition's information that does not include looking at undrawn cards.
+$\Pi_0$ lists the cards from the top of the pile. The deal and the opening flip consume a prefix $P_0:=(\Pi_0(1),\dots,\Pi_0(k_0))$. Its length $k_0$ is a function of $P_0$, because the flip stops at the first number card. The initial pile order $\omega_0$ is the rest of $\Pi_0$.
+
+Let $\mathcal G_n:=\sigma(\delta,P_0,\hat s_0,\dots,\hat s_n,\xi_0,\dots,\xi_n)$. This is the entire past of the game at card level:
+- the order of the deal and of the opening flip;
+- every hand of every player, and the discard and set-aside contents;
+- physical identities;
+- all past actions (functions of these);
+- all coins.
+
+A profile is **non-anticipating** if each action $a_n$ (a labelled card, a colour, or a target) is $\mathcal G_n$-measurable. This dominates every coalition's information that does not include looking at undrawn cards.
 
 **Lemma A0.** Let $\omega$ be a uniform ordering of a finite set $Z$ with $|Z|=k$. Then $\omega(1)$ is uniform on $Z$. Given $\omega(1)=x$, the rest $(\omega(2),\dots,\omega(k))$ is uniform over orderings of $Z\setminus\{x\}$.
 
@@ -252,27 +290,57 @@ So $(s_n,\bar a_n)$ is an *admissible play* of $\mathfrak G_N$ in the sense of �
 
 *Proof.* Induction on $n$.
 
-**Base case.** The deal and the flip consume a prefix of $\Pi_0$. Its length $k$ is determined by the prefix itself, because the flip stops at the first number card. For a complete deal-and-flip record $x=(x_1..x_k)$ and any ordering $\rho$ of the complement, $P(\Pi_0=(x,\rho))=1/168!$. So given the prefix, $\omega_0$ is uniform. $\hat s_0$ is a function of (prefix, $\delta$), and $\delta$ and $\xi_0$ are independent. The complement set $D_0$ is $\hat s_0$-measurable. So conditioning on the coarser $\mathcal G_0$ mixes identical uniform laws, and $\omega_0$ stays uniform.
+**Base case.** Take a possible deal-and-flip prefix $x=(x_1..x_k)$ with complement $D_0$, and any ordering $\rho$ of $D_0$. Then $P(\Pi_0=(x,\rho))=1/168!$. So $P(P_0=x)=|D_0|!/168!$ and $P(\omega_0=\rho\mid P_0=x)=1/|D_0|!$. $\hat s_0$ is a function of $(P_0,\delta)$. $(\delta,\xi_0)$ is independent of $\Pi_0$, so by Lemma A0′ $\omega_0$ is uniform given $\mathcal G_0=\sigma(\delta,P_0,\xi_0)$.
 
 **Step, decision move or deterministic update.** $\omega_{n+1}=\omega_n$. $\hat s_{n+1}$ is a function of $(\hat s_n,a_n)$, which is $\mathcal G_n$-measurable. $\xi_{n+1}$ is independent of $\sigma(\mathcal G_n,\omega_n)$. Apply Lemma A0′.
 
 **Step, draw with $D_n\ne\varnothing$.** The new information is $x=\omega_n(1)$, plus $\xi_{n+1}$. By Lemma A0 applied conditionally on $\mathcal G_n$, $x$ is uniform on $D_n$. Given $(\mathcal G_n,x)$, the rest of the pile is uniform over orderings of $D_n\setminus\{x\}$. Then apply Lemma A0′ for $\xi_{n+1}$. A knockout only moves hand cards into $X$ and does not touch $\omega$.
 
-**Step, draw with $D_n=\varnothing$.** The index $j$ of this reshuffle and the set $Z=X_n$ are $\mathcal G_n$-measurable. $\Pi_{j,Z}$ is independent of $\mathcal G_n\subseteq\sigma(\Pi_0,(\Pi_{i,\cdot})_{i<j},\delta,\xi_{0..n})$. So given $\mathcal G_n$, the new order is uniform on orderings of $Z$. This covers the set-aside cards, which are in $Z$. Then proceed as in the previous case.
+**Step, draw with $D_n=\varnothing$.** Let $J_n$ be the number of reshuffles before step $n$. $J_n$ and $X_n$ are $\mathcal G_n$-measurable, but the index of this reshuffle is random, so the argument is event-wise.
+
+Fix $j\ge1$ and a nonempty $Z\subseteq[168]$, and let $E:=\{J_n=j-1,\ X_n=Z\}\in\mathcal G_n$. On $E$ this reshuffle is the $j$-th and uses $\Pi_{j,Z}$. Run the game up to step $n$ on the variables $\mathcal Y:=(\Pi_0,(\Pi_{i,\cdot})_{i<j},\delta,\xi_{0..n})$ alone, stopping if a $j$-th reshuffle is needed. $E$ is the event that this run reaches step $n$ with $J_n=j-1$ and $X_n=Z$, and on $E$ the run reproduces the whole past. Hence $B\cap E\in\sigma(\mathcal Y)$ for every $B\in\mathcal G_n$, and $\Pi_{j,Z}$ is independent of $\sigma(\mathcal Y)$. So for every ordering $\rho$ of $Z$:
+
+$$P(B\cap E\cap\{\Pi_{j,Z}=\rho\})=P(B\cap E)/|Z|!.$$
+
+Summing over the countably many pairs $(j,Z)$ shows that, given $\mathcal G_n$, the new order is uniform on orderings of $X_n$. This covers the set-aside cards, which are in $X_n$. Then proceed as in the previous case.
 
 **Consequence 2.** The type-level successor is a deterministic function of $(s_n,\bar a_n)$ at decision states, and of $(s_n,\mathrm{ty}(\text{drawn card}))$ at chance states. Which physical copy of a type is played does not affect the type-level successor. $\square$
 
 **Corollaries.**
 - **(A1)** For a stationary type-level policy $\pi$, $(s_n)$ is a time-homogeneous Markov chain on $S$ with kernel $P_\pi(s,s')=\sum_a\pi(a|s)p(s'|s,a)$.
-- **(A2) Implementation equivalence.** The pre-shuffled pile read from the top (`sim/nomercy.c`) and on-demand sampling without replacement (`crosscheck/ref_nomercy.py`) produce the same law of the type-level trajectory, provided no policy reads the pile order. In `nomercy.c`, `G->pile` is accessed only in `reshuffle`, `eliminate`, `draw_one`, `game_init` and `check_invariants`, and never in any `choose_*` or score function. So all simulator policies are non-anticipating.
-- **(A3)** Everything that must be in the state is listed in §2.1. Dropping $\sigma$, $v$, the phase or the pile/discard split would break the Markov property. The order of $X$ is irrelevant, because reshuffles are uniform.
+- **(A2) Implementation equivalence.** Fix a non-anticipating profile. The pre-shuffled pile read from the top (`sim/nomercy.c`) and on-demand sampling without replacement (`crosscheck/ref_nomercy.py`) then produce the same law of the type-level trajectory: by Theorem A, both draw each card uniformly from $D^*_n$ given $\mathcal G_n$. Here, as throughout, the generators' outputs are idealised as independent and uniform.
+
+  *Code audit.* A grep of the current `sim/nomercy.c` for every access to the pile array (`G->pile`, or the pile of a copy of the game) finds these functions:
+  - The dynamics: `game_init`, `reshuffle`, `draw_one`, and `eliminate`. `eliminate` touches the pile only under the non-default `-elim_cards 0|1`.
+  - Diagnostics, which never influence an action:
+    - `check_invariants` counts the pile's composition, under `-debug`.
+    - `state_hash` hashes the pile order, under `-detect_cycles`. It is called only when $|D|+|X|\le2$, which (I1)–(I2) rule out under the Mercy rule.
+    - `print_state` reads only the pile size.
+  - `dup_death_G`, `dup_growth_G` and `roul_stats`, used by `collude`. They are reached from `eval_leaf`, `eval_pos`, `collude_enumerate`, and from `collude_roulette_color`, which `choose_roulette_color` calls. Each one sums over all pile positions, so it depends only on the composition $D_n$, which is $\mathcal G_n$-measurable. `collude`'s look-ahead also applies `play_card` to copies of the game, but only for non-Roulette cards, which draw nothing. So the copied pile order is never read.
+  - `determinize`, used by `mcwin` (below).
+  - `nature_pick`, used only under `-adv_nature` (below).
+
+  No other function reads the pile. In particular, `random`, `randomv`, `greedy` and the persona policies (`shark`, `grandpa`, `gremlin`, `grudge`, `peace`, `engineer`, `staller`) never do.
+
+  *`mcwin`.* `determinize` copies the pile, together with the opponents' hands, into a pool. It reorders the pool with a uniform shuffle from a generator seeded by one draw from the game's generator. For a fixed seed, `mcwin`'s action is a function of the pile order $\omega_n$, so it is not $\mathcal G_n$-measurable if the seed is counted in $\xi_n$. However, a uniform shuffle of a sequence gives a uniform arrangement of its multiset, whatever the input order. So the conditional law of the action given $\mathcal G_n\vee\sigma(\omega_n)$ does not depend on $\omega_n$. With the seed left out of the filtration, the action is conditionally independent of $\omega_n$ given $\mathcal G_n$.
+
+  Equivalently, `mcwin` has the same action law as the variant that shuffles the pool from a canonical (sorted) order. That variant is non-anticipating, with the seed in $\xi_n$. By induction on $n$, the two induce the same joint law of configurations and pile orders, so Theorem A and this corollary apply to `mcwin` through the variant.
+
+  So every simulator policy is non-anticipating, `mcwin` in the sense just described.
+
+  *`-adv_nature`.* This flag is excluded. `nature_pick` chooses the drawn card from the pile adversarially, so draws are not uniform. It is anticipating by design, and neither Theorem A nor this equivalence applies to it.
+- **(A3)** The components listed in §2.1 are sufficient: with them, $(s_n)$ is a controlled Markov chain (Theorem A, A1). The order of $X$ is not needed, because reshuffles are uniform. The list is not minimal:
+  - $v$ is redundant. While $\sigma>0$ only Draw Cards can be played, so at a TURN state with $\sigma>0$ the top card $\tau$ is the last Draw Card played and $v=dv(\tau)$. When $\sigma=0$, $v=0$. At WCOL, $v$ may be stale, but Eff overwrites it with $dv(\tau)$ before it is used.
+  - $c$ is redundant whenever $\tau$ is coloured, since then $c=\mathrm{col}(\tau)$.
+
+  The previous version claimed that dropping $\sigma$, $v$, the phase or the pile/discard split would break the Markov property. That claim was not proved, and it is false for $v$, so it is withdrawn. No result depends on minimality.
 - A variant with an *eager* reshuffle (at the moment the pile empties) gives another finite model of the same kind. Lemma A0/A0′ apply unchanged because the reshuffle time is $\mathcal G$-measurable.
 
 ## 5. (b) The attractor/safety dichotomy
 
 ### 5.1 Abstract setting
 
-A finite MDP is $\mathfrak M=(S,F,A(\cdot),p,\mu_0)$, with terminal states absorbing and $\mathrm{succ}(s,a)=\{s':p(s'|s,a)>0\}$.
+A finite MDP is $\mathfrak M=(S,F,A(\cdot),p,\mu_0)$. $S$ is finite, every $s\in S$ has a nonempty finite action set $A(s)$ and a kernel $p(\cdot|s,a)$ on $S$, and the states of $F$ are absorbing. Let $\mathrm{succ}(s,a)=\{s':p(s'|s,a)>0\}$. For $\mathfrak G_N$, $S=R$ (§2.3), so $C\cap R=C$ below. The statements are written for a general $S$.
 
 An **admissible play** consists of:
 - a filtered probability space $(\Omega,(\mathcal G_n),P)$;
@@ -341,7 +409,7 @@ $$P(\tau_F>jK)\le(1-\varepsilon^K)^j,\qquad E[T]\le E[\tau_F]\le K\varepsilon^{-
 
 Also $P(T>t)\le(1-165^{-K})^{\lfloor t/K\rfloor}$. From every reachable state, against every profile, nature ends the game within $K$ micro-steps with probability at least $165^{-K}$.
 
-**(B) $C\cap R\ne\varnothing$.** There is a stationary deterministic policy under which $P(T=\infty)>0$, and hence $E[T]=\infty$. This is a pure profile in which each decision maker's choice is a function of the full current state, which requires knowing all hands.
+**(B) $C\cap R\ne\varnothing$.** There is a stationary deterministic policy under which $P(T=\infty)>0$, and hence $E[T]=\infty$. This is a pure profile in which each decision maker's choice is a function of the full current state, including all hands. The proof uses this full-information policy. It does not show that less information is insufficient.
 
 *Proof.*
 
@@ -357,13 +425,13 @@ With probability at least $\mu_0(s_0)\prod_ip(s_{i+1}|s_i,a_i)>0$ the chain is f
 
 Exclusivity is immediate. $\square$
 
-**Remark.** In case (A), $\sup E[T]$ over all non-anticipating profiles is finite, at most $K\,165^K$. By standard transient/stochastic-shortest-path MDP theory, it is attained by a stationary deterministic full-information profile solving the Bellman equation $V(s)=1\{\varphi(s)=\mathsf{TURN}\}+\max_a\sum_{s'}p(s'|s,a)V(s')$ with $V|_F=0$ (Bertsekas–Tsitsiklis 1991; Puterman ch. 7). This is cited, not re-proved here.
+**Remark.** In case (A), $\sup E[T]$ over all non-anticipating profiles is finite, at most $K\,165^K$. By standard transient/stochastic-shortest-path MDP theory, it is attained by a stationary deterministic full-information profile solving the Bellman equation $V(s)=1\{\varphi(s)\in\{\mathsf{TURN},\mathsf{RCOL}\}\}+\max_a\sum_{s'}p(s'|s,a)V(s')$ with $V|_F=0$ (Bertsekas–Tsitsiklis 1991; Puterman ch. 7). The reward $1\{\varphi\in\{\mathsf{TURN},\mathsf{RCOL}\}\}$ counts the turns of §2.3. This is cited, not re-proved here. That includes the step that the supremum over history-dependent admissible plays equals the supremum over MDP policies.
 
 ### 5.5 Correction to the constant in the task statement
 
 The claim "$P(T>nK)\le(1-\varepsilon)^n$, $E[T]\le K/\varepsilon$" is false in general.
 
-**Counterexample.** Take states $1..K$ plus terminal state 0. From state $i$, move to $i-1$ with probability $\varepsilon$ and to $K$ with probability $1-\varepsilon$. Then:
+**Counterexample.** Take states $1..K$ plus terminal state 0, and $0<\varepsilon\le1/2$, so that $\varepsilon$ is the minimum positive transition probability, as in the task's constant. For $\varepsilon>1/2$ the minimum would be $1-\varepsilon$. From state $i$, move to $i-1$ with probability $\varepsilon$ and to $K$ with probability $1-\varepsilon$. Then:
 - $C=\varnothing$, and $\mathrm{rank}(i)=i$;
 - but $E_K[\tau]=(1-\varepsilon^K)/((1-\varepsilon)\varepsilon^K)$.
 
@@ -380,13 +448,13 @@ For $\varepsilon=1/2$ and $K=10$, $E_K[\tau]=2046>K/\varepsilon=20$; this was ch
 
    It also covers the real imperfect-information game, which is a special case.
 
-   **Generalisation.** Lemma B2 uses only two facts: successors stay in $\mathrm{succ}$, and each $s'\in\mathrm{succ}(s_n,a_n)$ has conditional probability at least $\varepsilon_0$. So (A) also holds, with $\varepsilon$ replaced by $\varepsilon_0$, for any imperfect shuffle or partially informed play in which every card type present in $D^*$ has conditional probability at least $\varepsilon_0$ of being drawn next.
+   **Generalisation.** Lemma B2 uses only two facts: successors stay in $\mathrm{succ}$, and each $s'\in\mathrm{succ}(s_n,a_n)$ has conditional probability at least $\varepsilon_0$ given $\mathcal G_n$. Here $(\mathcal G_n)$ is a filtration to which the states and actions are adapted. So (A) also holds, with $\varepsilon$ replaced by $\varepsilon_0$, for any imperfect shuffle or partially informed play in which every card type present in $D^*_n$ has probability at least $\varepsilon_0$ of being drawn next, conditionally on $\mathcal G_n$ for such a filtration.
 
 2. **Not covered**: *anticipating* information, meaning any knowledge of the order of undrawn cards. Examples are peeking, marked or stacked decks, and a bot reading a simulator's RNG state. Then conditional draw probabilities can be 0 or 1, and Lemma B2 fails.
 
 **Proposition B3 (clairvoyant model).** Let $S'=\{(s,w)\}$, where $w$ is the type sequence of the pile, top first. Then:
 - $S'$ is finite, and nature moves only at reshuffles. Each type sequence has probability $\prod_tX(t)!/|X|!\ge1/165!$.
-- Clairvoyant non-anticipating profiles are admissible plays of this model, so Theorem B holds there with $\varepsilon'\ge1/165!$ and a safe set $C'$.
+- Call a profile *clairvoyant* if its actions may depend on the current and past pile orders, but not on the outcome of future reshuffles. Such profiles are non-anticipating with respect to the enlarged state, so they are admissible plays of this model. Theorem B holds there with $\varepsilon'\ge1/165!$ and a safe set $C'$. A profile that also foresees future reshuffles, such as a bot reading the simulator's RNG state (item 2 above), is not covered by this model.
 - $\mathrm{lift}(C):=\{(s,w):s\in C\}$ is safe. At a decision the order is unchanged. The drawn top type, or any reshuffled order, projects to a positive-probability successor of $s$, which lies in $C$.
 - Every $s\in R$ has a reachable lift: choose orders consistent with the draws along a witnessing path.
 
