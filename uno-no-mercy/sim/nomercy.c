@@ -255,6 +255,7 @@ static void end_game(Game *G, int winner, int cause) {
 }
 
 static void reshuffle(Game *G) {
+    if (G->dn == 0) return; // nothing below the top card: not a reshuffle
     int n = 0;
     for (int t = 0; t < NT; t++) {
         for (int c = 0; c < G->disc[t]; c++) G->pile[G->pn + n++] = (uint8_t)t;
@@ -709,7 +710,7 @@ static int choose_after_draw(Game *G, int p, int t) {
     int pol = G->pol[p];
     if (G->R->after_draw == 0) return 1;
     if (G->R->after_draw == 2) return 0;
-    if (pol == POL_RANDOM || pol == POL_RANDOMV) return (int)rng_below(G->rng, 2);
+    if (pol == POL_RANDOM || pol == POL_RANDOMV) { G->nchoices++; return (int)rng_below(G->rng, 2); }
     (void)t;
     return 1;
 }
@@ -775,6 +776,7 @@ static void play_card(Game *G, int p, int t) {
             return;
         }
         fin = 1;
+        G->force_target = -1; // a finisher's 7 swaps with nobody: drop any target a look-ahead policy picked
         finish_player(G, p);
         if (G->over) return;
         if (!G->R->finish_effect) { // the card only sets the colour; a pending penalty stays as it was
@@ -1366,7 +1368,8 @@ static void take_turn(Game *G) {
             if (end_of_action_mercy(G, p)) { if (!G->over) G->cur = next_alive(G, p, G->dir); return; }
             // the player can neither play nor draw: they pass. If every active player passes twice
             // in a row with nothing changing, the game is stuck forever (a genuinely infinite game).
-            if (++G->stuck_run >= 2 * G->nalive) { G->over = 1; G->endcause = 4; G->winner = -1; return; }
+            if (n > 0) G->stuck_run = 0; // declined a playable card (-voluntary_draw 1): not stuck
+            else if (++G->stuck_run >= 2 * G->nalive) { G->over = 1; G->endcause = 4; G->winner = G->first_finisher; return; }
             G->cur = next_alive(G, p, G->dir);
             return;
         }
@@ -1486,32 +1489,37 @@ static void play_game(Game *G) {
             uint64_t h = state_hash(G);
             for (int i = 0; i < G->hn && i < 64; i++)
                 if (G->hring[i] == h && G->cring[i] == G->nchoices) {
-                    if (dump_cap) { // print one full period of the loop
+                    if (dump_cap) { // print one full period of the loop, replayed on a copy of the game
+                        static __thread Game D;
+                        Rng dr = *G->rng;
+                        D = *G; D.rng = &dr; D.debug = 0;
                         flockfile(stderr);
                         fprintf(stderr, "=== proven infinite cycle after %lld turns: pile=%d disc=%d\n", G->turns, G->pn, G->dn);
                         print_state(G, stderr);
                         for (int k = 0; k < 200; k++) {
-                            take_turn(G);
-                            print_state(G, stderr);
-                            if (G->over) { fprintf(stderr, "=== NOT a cycle: the game ended\n"); break; }
-                            if (state_hash(G) == h) { fprintf(stderr, "=== back to the same state after %d turns\n", k + 1); break; }
+                            take_turn(&D);
+                            print_state(&D, stderr);
+                            if (D.over) { fprintf(stderr, "=== NOT a cycle: the game ended\n"); break; }
+                            if (state_hash(&D) == h) { fprintf(stderr, "=== back to the same state after %d turns\n", k + 1); break; }
                         }
                         funlockfile(stderr);
                     }
-                    G->over = 1; G->endcause = 5; G->winner = -1; break;
+                    G->over = 1; G->endcause = 5; G->winner = G->first_finisher; break;
                 }
             G->hring[G->hn % 64] = h;
             G->cring[G->hn % 64] = G->nchoices;
             G->hn++;
         }
         if (G->turn_cap && G->turns >= G->turn_cap && !G->over) {
-            G->over = 1; G->endcause = 3; G->winner = -1;
-            if (dump_cap) {
+            G->over = 1; G->endcause = 3; G->winner = G->first_finisher;
+            if (dump_cap) { // show the next few turns, replayed on a copy of the game
+                static __thread Game D;
+                Rng dr = *G->rng;
+                D = *G; D.rng = &dr; D.debug = 0; D.over = 0; D.turn_cap = 0;
                 flockfile(stderr);
                 fprintf(stderr, "=== capped game: pile=%d disc=%d stack=%d draws=%lld plays=%lld\n", G->pn, G->dn, G->stack, G->draws, G->plays);
                 print_state(G, stderr);
-                for (int k = 0; k < 12 && !0; k++) { G->over = 0; take_turn(G); print_state(G, stderr); }
-                G->over = 1;
+                for (int k = 0; k < 12 && !D.over; k++) { take_turn(&D); print_state(&D, stderr); }
                 funlockfile(stderr);
             }
         }
@@ -1688,7 +1696,8 @@ int main(int argc, char **argv) {
     if (np < 2 || np > 6 || deck < 0 || deck > 2 || ngames < 1 || R.hand_size < 1 || DECK - np * R.hand_size < 89 ||
         R.mercy < 2 || R.after_draw < 0 || R.after_draw > 2 || R.stack_rule < 0 || R.stack_rule > 2 ||
         R.elim_cards < 0 || R.elim_cards > 2 || R.roulette_chooser < 0 || R.roulette_chooser > 1 ||
-        R.end_rule < 0 || R.end_rule > 1 || R.finish_effect < 0 || R.finish_effect > 1)
+        R.end_rule < 0 || R.end_rule > 1 || R.finish_effect < 0 || R.finish_effect > 1 ||
+        search_depth < 0 || search_depth > MAXD)
         usage();
     if (nseatpol && nseatpol != np) { fprintf(stderr, "-seatpol needs exactly one policy per player\n"); exit(2); }
     select_deck(deck);

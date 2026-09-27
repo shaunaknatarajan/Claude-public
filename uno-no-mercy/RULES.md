@@ -154,6 +154,14 @@ unchanged except for the following.
   colour. Any penalty that was already pending stays with the next player, unchanged. The turn
   passes to the next player.
 - **Turns** are counted exactly as in §6.
-- **Deadlock without the Mercy rule.** In variant B the hands can hold every card but the top
-  one. Then a player who can neither play nor draw passes. If every remaining player passes
-  twice in a row with nothing changing, the game is stuck forever and counts as never ending.
+- **Running out of cards without the Mercy rule.** In variant B the hands can hold almost every
+  card, so the draw pile and the discard pile below the top card can both be empty.
+  - A penalty is drawn as far as the cards go; the rest of it lapses, and the victim still
+    loses their turn.
+  - A Roulette reveal stops when nothing is left to reveal. The victim keeps what they drew.
+  - A player who can neither play nor draw passes. If every remaining player passes twice in a
+    row with nothing changing, the game is stuck forever and counts as never ending. Under the
+    default rules this can't happen: with both piles empty, all 24 wilds except possibly the top
+    card are in hands, so whoever holds one can always play. Only the non-default "may decline
+    a playable card" rule can produce it.
+  Both simulators, and the AI-game engine, resolve these cases the same way.
