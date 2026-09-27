@@ -24,6 +24,27 @@ Default rules implemented
   * Playing your last card wins immediately; its effect is not applied.
   * Game ends when a hand is emptied or only one player remains.
 
+House variant, RULES.md section 7 (--end-rule last), implemented from the spec text only
+  * A player who plays their last card (also via Discard All) FINISHES: their seat leaves
+    play like a knocked-out seat (skipped, no 7-swap target, not in the 0-pass chain).
+  * The game ends when only one player is left in play (by a finish or a Mercy knockout).
+    Winner = first finisher; if nobody finished, the last player standing.
+  * --finish-effect 1 (default): the finishing card acts on the players still in, starting
+    from the finisher's seat.  Draw cards add to the pending penalty for the next player
+    (WRD4: in the new direction; no 2-player self-hit).  Skip skips the next player.
+    Reverse reverses and the next player in the new direction plays (no 2-player "go
+    again").  Skip Everyone passes the turn on.  Wild colour is named by the finisher.
+    Roulette hits the next player as usual.  0 passes hands among the remaining players;
+    7 does nothing.  If the finish leaves only one player, the game is over and no effect
+    is applied.
+  * --finish-effect 0: the finishing card only sets the colour (a wild's colour is named by
+    the finisher, Roulette included).  A penalty that was already pending stays, unchanged
+    (total AND stacking threshold), with the next player in the unchanged direction.
+  * --mercy N sets the knockout threshold (1000 = variant B).  With N > 25 the piles can
+    run dry: a player who must draw and cannot passes (the rest of a penalty lapses, a
+    Roulette reveal stops).  2 x (players in) consecutive passes with nothing changing =
+    stuck game (counted separately, excluded from the turn statistics).
+
 Random policy (fixed so that distributions are comparable across implementations)
   * normal turn: uniform over DISTINCT playable card types in hand (type = colour+kind for
     coloured cards, the wild kind for wilds); no voluntary drawing.
@@ -135,13 +156,29 @@ class Game:
 
     __slots__ = ("n", "rng", "draw_pile", "discard", "set_aside", "hands", "size", "alive",
                  "n_alive", "dir", "pending", "last_dv", "color", "cur", "over", "emptied",
-                 "winner", "turns", "plays", "draws", "reshuffles", "elims", "check")
+                 "winner", "turns", "plays", "draws", "reshuffles", "elims", "check",
+                 # RULES.md section 7 (house variant) and --mercy
+                 "end_last", "fin_eff", "mercy", "can_stall", "finished", "first_fin",
+                 "last_exit_fin", "last_standing", "roul_played", "roul_reveals", "passes",
+                 "idle", "idle_sig", "stuck")
 
-    def __init__(self, n, rng, check=False):
+    def __init__(self, n, rng, check=False, end_last=False, finish_effect=1, mercy=MERCY):
         assert 2 <= n <= 6
         self.n = n
         self.rng = rng
         self.check = check
+        self.end_last = end_last            # True: play until one player is left (sec. 7)
+        self.fin_eff = finish_effect        # sec. 7: does the finishing card take effect?
+        self.mercy = mercy                  # knockout threshold (25 official; 1000 = none)
+        self.can_stall = mercy > MERCY      # piles can run dry only without the 25 rule
+        self.finished = []                  # seats in finishing order
+        self.first_fin = -1
+        self.last_exit_fin = False          # was the most recent exit a finish?
+        self.last_standing = -1
+        self.roul_played = self.roul_reveals = self.passes = 0
+        self.idle = 0
+        self.idle_sig = None
+        self.stuck = False
         self.draw_pile = build_deck()
         self.discard = []
         self.set_aside = []
@@ -187,19 +224,26 @@ class Game:
         return c
 
     def _reshuffle(self):
+        """Returns False (nothing to reshuffle) only when stalling is possible (--mercy > 25)."""
+        if len(self.discard) <= 1 and not self.set_aside:
+            if self.can_stall:
+                return False
+            raise InvariantError("deadlock: draw pile and discard pile both exhausted")
         top = self.discard.pop()
         pool = self.discard
         pool.extend(self.set_aside)          # knocked-out hands join at the reshuffle
         self.set_aside = []
         self.discard = [top]
-        if not pool:
-            raise InvariantError("deadlock: draw pile and discard pile both exhausted")
         self.draw_pile = pool                # unordered; each draw picks uniformly
         self.reshuffles += 1
+        return True
 
     def _draw_card(self):
+        """A uniformly random card from the draw pile; None if no card can be drawn at all
+        (possible only with --mercy > 25)."""
         if not self.draw_pile:
-            self._reshuffle()
+            if not self._reshuffle():
+                return None
         self.draws += 1
         return self._pop_random()
 
@@ -210,7 +254,7 @@ class Game:
         h[t] = h.get(t, 0) + 1
         s = self.size[p] + 1
         self.size[p] = s
-        if s >= MERCY:
+        if s >= self.mercy:
             self._eliminate(p)
             return True
         return False
@@ -224,6 +268,7 @@ class Game:
         self.alive[p] = False
         self.n_alive -= 1
         self.elims += 1
+        self.last_exit_fin = False
 
     def _remove(self, p, t):
         h = self.hands[p]
@@ -244,9 +289,33 @@ class Game:
 
     def _end(self, emptied, winner):
         self.over = True
+        if self.end_last:
+            # sec. 7: over when one player is left; the first finisher is the winner, or,
+            # if nobody finished, the last player standing. `emptied` = final exit was a finish.
+            self.last_standing = self.alive.index(True) if self.n_alive == 1 else -1
+            winner = self.first_fin if self.first_fin >= 0 else self.last_standing
+            emptied = self.last_exit_fin
         self.emptied = emptied
         self.winner = winner
         return True
+
+    def _pass_turn(self, p, drew):
+        """Variant B only: player p could neither play nor draw (any more) and passes.
+        Returns True if the game is stuck (every player in passed twice, nothing changing)."""
+        self.passes += 1
+        self.cur = self._next(p)
+        if drew:
+            self.idle = 0
+            return False
+        sig = (self.draws, self.plays, self.pending, self.color, self.discard[-1])
+        self.idle = self.idle + 1 if sig == self.idle_sig else 1
+        self.idle_sig = sig
+        if self.idle >= 2 * self.n_alive:
+            self.stuck = True
+            self.over = True
+            self.winner = -1
+            return True
+        return False
 
     # ---------------------------------------------------------------- one turn
     def step(self):
@@ -265,7 +334,10 @@ class Game:
                 self.pending = 0
                 self.last_dv = 0
                 for _ in range(amt):
-                    if self._receive(p, self._draw_card()):
+                    c = self._draw_card()
+                    if c is None:                        # piles dry (--mercy > 25): rest lapses
+                        break
+                    if self._receive(p, c):
                         break                            # knocked out mid-penalty
                 if not self.alive[p] and self.n_alive == 1:
                     return self._end(False, self._next(p))
@@ -278,8 +350,11 @@ class Game:
             if opts:
                 t = opts[int(rng.random() * len(opts))]
             else:                                        # draw until playable, then play it
+                d0 = self.draws
                 while True:
                     c = self._draw_card()
+                    if c is None:                        # cannot draw (--mercy > 25): pass
+                        return self._pass_turn(p, self.draws != d0)
                     if self._receive(p, c):
                         if self.n_alive == 1:
                             return self._end(False, self._next(p))
@@ -302,7 +377,11 @@ class Game:
                 self.discard.extend([u] * k)             # placed under the Discard All
                 self.size[p] -= k
         self.discard.append(t)
+        if t == ROUL:
+            self.roul_played += 1
         if self.size[p] == 0:
+            if self.end_last:
+                return self._finish(p, t)                # sec. 7: finish, play goes on
             return self._end(True, p)                    # last card: win, no effect applied
 
         rng = self.rng
