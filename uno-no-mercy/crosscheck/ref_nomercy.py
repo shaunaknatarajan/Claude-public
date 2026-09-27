@@ -47,6 +47,10 @@ import time
 from collections import Counter
 from multiprocessing import Pool
 
+# RULES.md section 6 counts a Roulette victim's reveal as a turn. The first cross-check
+# (ref_results.json) was run with this set to False; see COMPARISON.md.
+COUNT_ROULETTE_TURN = True
+
 # --------------------------------------------------------------------------------------
 # Card encoding
 #   coloured card: t = colour*16 + kind   (colour 0..3)
@@ -329,6 +333,8 @@ class Game:
 
         if t == ROUL:
             victim = self._next(p)
+            if COUNT_ROULETTE_TURN:
+                self.turns += 1   # RULES.md section 6 (current): the victim's reveal counts as a turn
             c = int(rng.random() * 4)                    # victim names the colour
             self.color = c
             while True:
@@ -689,7 +695,11 @@ def main():
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                                   "ref_results.json"))
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--v1-turns", action="store_true",
+                    help="old turn count (Roulette reveals not counted), as in ref_results.json")
     a = ap.parse_args()
+    global COUNT_ROULETTE_TURN
+    COUNT_ROULETTE_TURN = not a.v1_turns
 
     if a.selftest:
         k = selftest()
