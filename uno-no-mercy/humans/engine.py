@@ -640,8 +640,7 @@ class Game:
         lines = [f"You are {me}. Turn {self.turns}.", self.rule_line()]
         lines.append(f"Your hand ({self.size(p)} cards):")
         lines += self.hand_lines(p)
-        top = name(self.top) if self.top < 64 else f"{name(self.top)} (color in play: {COLORS[self.color]})"
-        lines.append(f"Top of discard pile: {top}. Color in play: {COLORS[self.color]}.")
+        lines.append(f"Top of discard pile: {name(self.top)}. Color in play: {COLORS[self.color]}.")
         if self.pending:
             lines.append(f"PENDING PENALTY on you: {self.pending} cards (last Draw card was +{self.last_dv}; "
                          f"you may stack a Draw card of value >= {self.last_dv}, any color).")
@@ -826,7 +825,7 @@ def autoplay(n, games, seed, end_rule="first", mercy=MERCY, jobs=1):
             rows = [r for part in pool.map(_chunk, parts) for r in part]
     turns = [r[0] for r in rows]
     m = sum(turns) / len(turns)
-    sd = (sum((x - m) ** 2 for x in turns) / (len(turns) - 1)) ** 0.5
+    sd = (sum((x - m) ** 2 for x in turns) / (len(turns) - 1)) ** 0.5 if len(turns) > 1 else 0.0
     mean = lambda j: sum(r[j] for r in rows) / len(rows)  # noqa: E731
     out = {"players": n, "games": games, "mean_turns": m, "sem": sd / len(turns) ** 0.5, "max": max(turns)}
     out.update({"end_rule": end_rule, "mercy": norm_mercy(mercy) or None, "seed": seed, "jobs": max(jobs, 1),
