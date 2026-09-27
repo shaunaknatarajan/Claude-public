@@ -4,3 +4,5 @@ __pycache__/
 uno-no-mercy/results/**/*.log
 uno-no-mercy/humans/games/*/state.pkl.tmp
 __pycache__/
+uno-no-mercy/results/*.log
+uno-no-mercy/results/**/*.log
