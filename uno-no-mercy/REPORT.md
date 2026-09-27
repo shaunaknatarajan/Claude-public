@@ -20,4 +20,4 @@
    look exponential, with no "safe forever" plateau. Whether *perfect* collusion could stall
    forever comes down to a precise, finite question that we could not settle.
 
-TBD sections follow.
+<!--SECTIONS-->
