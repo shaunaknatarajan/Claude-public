@@ -61,7 +61,7 @@ const RULES_CORE = `Rules (UNO Show 'Em No Mercy, with this table's house rules 
 const RULES_LAST = `HOW THIS TABLE ENDS THE GAME: play until one player is left. When you play your last card you FINISH: you leave the game with a place (the 1st to finish is the winner, then 2nd, 3rd, ...). Your finishing card still takes effect on the players still in: a Draw card's penalty goes to the next player, Skip skips them, Reverse reverses, a Wild Color Roulette hits the next player, a 0 makes the players still in pass their hands on; a 7 does nothing and Skip Everyone just passes the turn on. Play goes on until only one player still holds cards: that player LOSES.`
 const RULES_FIRST = `The first player to play their last card wins and the game ends.`
 const RULES_NO_MERCY = `NO MERCY RULE at this table: nobody is ever knocked out, however many cards they hold, so hands can grow to 50, 80, 100+ cards. If the draw pile and the discard pile both run out, you draw what there is; a player who can neither play nor draw passes.`
-const RULES_MERCY_LAST = `MERCY RULE: reaching 25 cards knocks you out of the game (placed below everyone who finished).`
+const RULES_MERCY_LAST = `MERCY RULE: reaching 25 cards knocks you out of the game, placed below everyone who finished and below the last player left (if nobody has finished when everyone else is knocked out, the last player standing wins).`
 const RULES_MERCY_FIRST = `MERCY RULE: reaching 25 cards knocks you out; the last player left also wins.`
 const rulesFor = g => !isHouse(g) ? RULES : [RULES_CORE, g.endRule === 'last' ? RULES_LAST : RULES_FIRST,
   g.noMercy ? RULES_NO_MERCY : (g.endRule === 'last' ? RULES_MERCY_LAST : RULES_MERCY_FIRST)].join(' ')

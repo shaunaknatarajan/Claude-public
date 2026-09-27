@@ -128,7 +128,7 @@ def new_attrs():
     """Attributes added after the first games were saved; old pickles get these defaults on load."""
     return {"end_rule": "first", "mercy": MERCY, "finished": [], "ko_seats": [], "loser": None, "placings": None,
             "stuck_run": 0, "stuck": False, "endless": False, "loop_seen": {}, "detect_loops": True,
-            "zeros": 0, "sevens": 0, "roulettes": 0, "max_hand": HAND0, "dry_draws": 0, "quiet": False}
+            "zeros": 0, "sevens": 0, "roulettes": 0, "max_hand": HAND0, "dry_draws": 0, "ended_by": None, "quiet": False}
 
 
 # ----------------------------------------------------------------------------- game
@@ -249,7 +249,7 @@ class Game:
         self.ko_seats.append(p)
         if self.n_alive() == 1:
             if self.end_rule == "last":
-                self.end_last()
+                self.end_last("knockout")
             else:
                 w = self.alive.index(True)
                 self.finish(w, "last player standing")
@@ -269,12 +269,13 @@ class Game:
         self.say(f"{self.names[p]} plays {self.pron(p)} last card and finishes {ordinal(k)}!"
                  + (" (the winner)" if k == 1 else ""))
         if self.n_alive() == 1:
-            self.end_last()
+            self.end_last("finish")
 
-    def end_last(self):
-        """end_rule last: only one player is left in play."""
+    def end_last(self, by):
+        """end_rule last: only one player is left in play, after a finish or a knockout (by)."""
         if self.over:
             return
+        self.ended_by = by
         left = [q for q in range(self.n) if self.alive[q]]
         self.placings = [q for _, q in self.finished] + left + self.ko_seats[::-1]
         self.over, self.winner, self.loser = True, self.placings[0], self.placings[-1]
@@ -805,7 +806,8 @@ def play_random_games(n, first, count, seed, rng_seed, end_rule, mercy):
             g.choose(random_choice(g, rng))
         g.check()
         out.append((g.turns, g.plays, g.draws, g.reshuffles, len(g.knockouts), len(g.finished), g.max_hand,
-                    g.zeros, g.sevens, g.roulettes, g.end_reason, g.winner, g.loser, g.reshuffles + g.dry_draws))
+                    g.zeros, g.sevens, g.roulettes, g.end_reason, g.winner, g.loser, g.reshuffles + g.dry_draws,
+                    g.ended_by))
     return out
 
 
@@ -835,6 +837,7 @@ def autoplay(n, games, seed, end_rule="first", mercy=MERCY, jobs=1):
                 # the C simulator also counts a draw from an empty draw pile AND empty discard as a reshuffle
                 "mean_reshuffles_c_style": mean(13),
                 "end_reasons": dict(Counter(r[10] for r in rows)),
+                "ended_by": dict(Counter(r[14] for r in rows if r[14])),  # end_rule last: the last finish or a knockout
                 "wins_by_seat": [sum(1 for r in rows if r[11] == q) for q in range(n)],
                 "losses_by_seat": [sum(1 for r in rows if r[12] == q) for q in range(n)]})
     print(json.dumps(out))
