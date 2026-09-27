@@ -1376,7 +1376,7 @@ def run_variant(a, players):
     label = f"end_rule={a.end_rule},finish_effect={a.finish_effect},mercy={a.mercy}"
     per = {}
     for n in players:
-        meta = dict(seed=a.seed, games_requested=a.games, chunk=a.chunk, max_turns=a.max_turns,
+        meta = dict(seed=a.seed, games_requested=a.games, chunk=a.chunk, turn_cap=a.max_turns,
                     detect_loops=detect, invariant_checked_games=sum(t[3] for t in tasks
                                                                      if t[0] == n),
                     elapsed_s_whole_invocation=elapsed, procs=a.procs,

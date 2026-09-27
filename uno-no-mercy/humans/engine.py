@@ -107,6 +107,10 @@ def short_name(t):
     return WILD_LONG[t] if t >= 64 else KIND_LONG.get(t & 15, str(t & 15))
 
 
+def cards(k):
+    return f"{k} card{'' if k == 1 else 's'}"
+
+
 def ordinal(k):
     return f"{k}{'th' if 10 <= k % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(k % 10, 'th')}"
 
@@ -222,7 +226,7 @@ class Game:
             if self.official():
                 self.say("The discard pile is shuffled into a new draw pile.")
             else:
-                self.say(f"The discard pile is shuffled into a new draw pile ({len(self.pile)} card(s)).")
+                self.say(f"The discard pile is shuffled into a new draw pile ({cards(len(self.pile))}).")
         t = self.pile.pop()
         self.hands[p][t] += 1
         self.draws += 1
@@ -622,7 +626,7 @@ class Game:
                     ch = ", ".join(f"{k} = {COLORS[opts[k][2]]}" for k in range(i, j + 1))
                     lines.append(f"  {verb} {name(t)}{tail}, naming:  {ch}")
                 else:
-                    ch = ", ".join(f"{k} = {self.names[opts[k][2]]} ({self.size(opts[k][2])} cards)"
+                    ch = ", ".join(f"{k} = {self.names[opts[k][2]]} ({cards(self.size(opts[k][2]))})"
                                    for k in range(i, j + 1))
                     lines.append(f"  {verb} {name(t)} and swap hands with:  {ch}")
             i = j + 1
@@ -650,7 +654,7 @@ class Game:
                     tag = f" (!! near the {self.mercy}-card knockout)"
                 else:
                     tag = " (UNO!)" if sz == 1 else ""
-                seats.append(f"{'You' if q == p else self.names[q]}: {sz} card{'s' if sz != 1 else ''}{tag}")
+                seats.append(f"{'You' if q == p else self.names[q]}: {cards(sz)}{tag}")
             q = (q + self.dir) % self.n
         lines.append(f"Still in ({self.n_alive()}), in turn order from you: " + " -> ".join(seats))
         if self.finished:
@@ -658,7 +662,7 @@ class Game:
                 f"{ordinal(i + 1)} {self.names[q]} (turn {t})" for i, (t, q) in enumerate(self.finished)))
         if self.knockouts:
             lines.append("Knocked out: " + ", ".join(f"{nm} (turn {t})" for t, nm in self.knockouts))
-        lines.append(f"Draw pile: {len(self.pile)} cards. Discard pile: {len(self.discard) + 1} cards.")
+        lines.append(f"Draw pile: {cards(len(self.pile))}. Discard pile: {cards(len(self.discard) + 1)}.")
         lines.append("Recent events:")
         lines += ["  " + e for e in self.log[-12:]]
         if self.notes[p]:
