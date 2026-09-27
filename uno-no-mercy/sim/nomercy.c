@@ -121,6 +121,11 @@ typedef struct {
     int wrd4_2p_self;     // 1: with exactly 2 players, Wild Reverse Draw 4 makes its PLAYER face the +4
                           //    (official sheet: "skips the other player and makes YOU draw 4 cards!")
     int stack_mandatory;  // 1: a player holding a legal stacking card must stack
+    int end_rule;         // 0 (official): the first player to empty their hand wins and the game ends
+                          // 1 (house): players who empty their hand finish and leave; play goes on
+                          //    until one player is left (RULES.md section 7)
+    int finish_effect;    // end_rule 1 only. 1: the finishing card still takes effect on the players
+                          //    left; 0: it only sets the colour (a pending penalty stays as it was)
 } Rules;
 
 static void rules_default(Rules *R) {
@@ -138,6 +143,8 @@ static void rules_default(Rules *R) {
     R->wrd4_victim = 0;
     R->wrd4_2p_self = 1;
     R->stack_mandatory = 0;
+    R->end_rule = 0;
+    R->finish_effect = 1;
 }
 
 // ----------------------------------------------------------------------------
@@ -209,6 +216,8 @@ typedef struct {
     long long dup_draw_turns;
     int max_stack;
     int max_hand_seen;
+    long long finishes; // players who emptied their hand (end_rule 1)
+    int first_finisher;
     int elim_turn[MAXP];
     long long turn_cap;
     int debug;
@@ -288,8 +297,17 @@ static void eliminate(Game *G, int p) {
     }
     if (G->nalive == 1) {
         for (int q = 0; q < G->np; q++)
-            if (G->alive[q]) end_game(G, q, 2);
+            if (G->alive[q]) end_game(G, G->first_finisher >= 0 ? G->first_finisher : q, 2);
     }
+}
+
+// end_rule 1: player p has emptied their hand and leaves the game.
+static void finish_player(Game *G, int p) {
+    G->alive[p] = 0;
+    G->nalive--;
+    G->finishes++;
+    if (G->first_finisher < 0) G->first_finisher = p;
+    if (G->nalive == 1) end_game(G, G->first_finisher, 1);
 }
 
 // Draw one card for player p. Returns the card type, -1 if nothing can be drawn,
@@ -750,9 +768,20 @@ static void play_card(Game *G, int p, int t) {
             }
         }
     }
-    if (G->hsize[p] == 0) { // "When a player plays their final card, they win." (effects not applied)
-        end_game(G, p, 1);
-        return;
+    int fin = 0; // end_rule 1: p has just finished and is no longer in the game
+    if (G->hsize[p] == 0) {
+        if (G->R->end_rule == 0) { // "When a player plays their final card, they win." (effects not applied)
+            end_game(G, p, 1);
+            return;
+        }
+        fin = 1;
+        finish_player(G, p);
+        if (G->over) return;
+        if (!G->R->finish_effect) { // the card only sets the colour; a pending penalty stays as it was
+            if (k == K_ROUL) G->color = choose_color(G, p);
+            G->cur = next_alive(G, p, G->dir);
+            return;
+        }
     }
     int v = drawval_kind(k);
     switch (k) {
@@ -768,7 +797,7 @@ static void play_card(Game *G, int p, int t) {
         G->stack += v;
         G->stackv = v;
         if (G->stack > G->max_stack) G->max_stack = G->stack;
-        if (G->nalive == 2 && G->R->wrd4_2p_self) {
+        if (!fin && G->nalive == 2 && G->R->wrd4_2p_self) {
             // reverse acts as a skip with two players, so the "next player in the new direction" is p
             G->dir = -G->dir;
             G->cur = p;
@@ -782,11 +811,11 @@ static void play_card(Game *G, int p, int t) {
         G->cur = next_alive(G, next_alive(G, p, G->dir), G->dir);
         break;
     case K_SKIPALL:
-        G->cur = p;
+        G->cur = fin ? next_alive(G, p, G->dir) : p; // a finisher can't take the extra turn
         break;
     case K_REV:
         G->dir = -G->dir;
-        if (G->nalive == 2 && G->R->reverse2p_skip) G->cur = p;
+        if (!fin && G->nalive == 2 && G->R->reverse2p_skip) G->cur = p;
         else G->cur = next_alive(G, p, G->dir);
         break;
     case K_ROUL: {
@@ -817,7 +846,7 @@ static void play_card(Game *G, int p, int t) {
         G->cur = next_alive(G, p, G->dir);
         break;
     case 7:
-        if (G->R->zero_seven) {
+        if (G->R->zero_seven && !fin) { // a finisher has no hand to swap
             int q = choose_swap(G, p);
             swap_hands(G, p, q);
             G->sevens++;
@@ -1056,7 +1085,8 @@ static void eval_pos(const Game *G, int depth, double *risk, double *comfort) {
                 B->force_target = ntg > 1 ? others[ti] : -1;
                 play_card(B, q, t);
                 double r, c;
-                eval_pos(B, depth - 1, &r, &c);
+                if (B->finishes > G->finishes) { r = 1.0; c = -1e6; } // end_rule 1: someone left the game
+                else eval_pos(B, depth - 1, &r, &c);
                 if (r < best_r || (r == best_r && c > best_c)) { best_r = r; best_c = c; }
                 if (best_r == 0.0 && depth > 1) { /* good enough at inner levels */ }
             }
@@ -1104,7 +1134,8 @@ static int collude_enumerate(Game *G, int p, const int *opts, int n, Macro *out)
                     G2.force_color = ncol == 4 ? ci : -1;
                     G2.force_target = ntg > 1 ? others[ti] : -1;
                     play_card(&G2, p, t);
-                    eval_after(&G2, &risk, &comfort);
+                    if (G2.finishes > G->finishes) { risk = 1.0; comfort = -1e6; }
+                    else eval_after(&G2, &risk, &comfort);
                 }
                 Macro m = {t, ncol == 4 ? ci : -1, ntg > 1 ? others[ti] : -1, -risk * risk_w + comfort};
                 out[nm++] = m;
@@ -1162,7 +1193,8 @@ static int collude_stack_enumerate(Game *G, int p, const int *opts, int n, Macro
             G2 = *G;
             G2.force_color = ncol == 4 ? ci : -1;
             play_card(&G2, p, t);
-            eval_after(&G2, &risk, &comfort);
+            if (G2.finishes > G->finishes) { risk = 1.0; comfort = -1e6; }
+            else eval_after(&G2, &risk, &comfort);
             Macro m = {t, ncol == 4 ? ci : -1, -1, -risk * risk_w + comfort};
             out[nm++] = m;
         }
@@ -1358,6 +1390,7 @@ static void game_init(Game *G, const Rules *R, Rng *rng, int np, const int *pol)
     G->force_color = -1;
     G->force_target = -1;
     G->stack_last = -1;
+    G->first_finisher = -1;
     for (int q = 0; q < MAXP; q++) G->last_hitter[q] = -1;
     int n = 0;
     for (int c = 0; c < 4; c++)
@@ -1506,7 +1539,7 @@ typedef struct {
     // results
     long long *hist; // turns histogram, index = turns (capped at HMAX-1 => overflow)
     long long overflow;
-    double sum_t, sum_t2, sum_plays, sum_draws, sum_resh, sum_elims, sum_maxstack, sum_maxhand;
+    double sum_t, sum_t2, sum_plays, sum_draws, sum_resh, sum_elims, sum_maxstack, sum_maxhand, sum_fin;
     long long max_t;
     long long endcause[6];
     long long wins_by_seat[MAXP];
@@ -1547,6 +1580,7 @@ static void *run_job(void *arg) {
         J->sum_draws += (double)G.draws;
         J->sum_resh += (double)G.reshuffles;
         J->sum_elims += (double)G.elims;
+        J->sum_fin += (double)G.finishes;
         J->sum_maxstack += G.max_stack;
         J->sum_maxhand += G.max_hand_seen;
         J->sum_zero += (double)G.zeros;
@@ -1585,6 +1619,8 @@ static void usage(void) {
             "  -voluntary_draw 0|1 [0] -after_draw 0|1|2 [0] -stack_rule 0|1|2 [0] -stack_mandatory 0|1 [0]\n"
             "  -roulette_chooser 0|1 [0] -elim_cards 0|1|2 [2] -zero_seven 0|1 [1] -reverse2p_skip 0|1 [1]\n"
             "  -wrd4_victim 0|1 [0] -wrd4_2p_self 0|1 [1]\n"
+            "  -end_rule 0|1 [0] (1 = house rule: play on until one player is left; RULES.md section 7)\n"
+            "  -finish_effect 0|1 [1] (end_rule 1: does the finishing card take effect?)\n"
             "colluder search (policy collude): -depth N [1] -phantom 0|1 [1] -worst 0|1 [0] -riskw X [1e6]\n"
             "  -band lo,hi [4,14] -pw roul,d10,d6,wrd4 [40,25,12,4] -insure X [0]\n"
             "competitive Monte-Carlo player (policy mcwin): -mcwR N [48]\n"
@@ -1643,13 +1679,16 @@ int main(int argc, char **argv) {
         else if (OPT("-wrd4_victim")) R.wrd4_victim = atoi(v);
         else if (OPT("-wrd4_2p_self")) R.wrd4_2p_self = atoi(v);
         else if (OPT("-stack_mandatory")) R.stack_mandatory = atoi(v);
+        else if (OPT("-end_rule")) R.end_rule = atoi(v);
+        else if (OPT("-finish_effect")) R.finish_effect = atoi(v);
         else usage();
 #undef OPT
     }
     // the official game is for 2-6 players; the flip for the opening card needs >= 89 undealt cards
     if (np < 2 || np > 6 || deck < 0 || deck > 2 || ngames < 1 || R.hand_size < 1 || DECK - np * R.hand_size < 89 ||
         R.mercy < 2 || R.after_draw < 0 || R.after_draw > 2 || R.stack_rule < 0 || R.stack_rule > 2 ||
-        R.elim_cards < 0 || R.elim_cards > 2 || R.roulette_chooser < 0 || R.roulette_chooser > 1)
+        R.elim_cards < 0 || R.elim_cards > 2 || R.roulette_chooser < 0 || R.roulette_chooser > 1 ||
+        R.end_rule < 0 || R.end_rule > 1 || R.finish_effect < 0 || R.finish_effect > 1)
         usage();
     if (nseatpol && nseatpol != np) { fprintf(stderr, "-seatpol needs exactly one policy per player\n"); exit(2); }
     select_deck(deck);
@@ -1678,7 +1717,7 @@ int main(int argc, char **argv) {
         T.overflow += J->overflow;
         for (long long i = 0; i < J->noverflow_vals; i++) T.overflow_vals[T.noverflow_vals++] = J->overflow_vals[i];
         T.sum_t += J->sum_t; T.sum_t2 += J->sum_t2;
-        T.sum_plays += J->sum_plays; T.sum_draws += J->sum_draws; T.sum_resh += J->sum_resh; T.sum_elims += J->sum_elims;
+        T.sum_plays += J->sum_plays; T.sum_draws += J->sum_draws; T.sum_resh += J->sum_resh; T.sum_elims += J->sum_elims; T.sum_fin += J->sum_fin;
         T.sum_maxstack += J->sum_maxstack; T.sum_maxhand += J->sum_maxhand;
         T.sum_zero += J->sum_zero; T.sum_seven += J->sum_seven; T.sum_roul += J->sum_roul; T.sum_dup += J->sum_dup;
         if (J->max_t > T.max_t) T.max_t = J->max_t;
@@ -1707,16 +1746,17 @@ int main(int argc, char **argv) {
     printf("],\n");
     printf("  \"rules\": {\"hand\":%d,\"mercy\":%d,\"mercy_immediate\":%d,\"voluntary_draw\":%d,\"after_draw\":%d,"
            "\"stack_rule\":%d,\"roulette_chooser\":%d,\"elim_cards\":%d,\"zero_seven\":%d,"
-           "\"reverse2p_skip\":%d,\"wrd4_victim\":%d,\"wrd4_2p_self\":%d,\"stack_mandatory\":%d},\n",
+           "\"reverse2p_skip\":%d,\"wrd4_victim\":%d,\"wrd4_2p_self\":%d,\"stack_mandatory\":%d,"
+           "\"end_rule\":%d,\"finish_effect\":%d},\n",
            R.hand_size, R.mercy, R.mercy_immediate, R.voluntary_draw, R.after_draw, R.stack_rule, R.roulette_chooser,
            R.elim_cards, R.zero_seven, R.reverse2p_skip, R.wrd4_victim, R.wrd4_2p_self,
-           R.stack_mandatory);
+           R.stack_mandatory, R.end_rule, R.finish_effect);
     printf("  \"mean_turns\": %.6f, \"sd_turns\": %.6f, \"sem_turns\": %.6f, \"max_turns\": %lld,\n", mean, sqrt(var),
            sqrt(var / N), T.max_t);
     printf("  \"quantiles\": {\"p50\":%lld,\"p90\":%lld,\"p99\":%lld,\"p999\":%lld,\"p9999\":%lld,\"p99999\":%lld,\"p999999\":%lld},\n",
            qs_idx[0], qs_idx[1], qs_idx[2], qs_idx[3], qs_idx[4], qs_idx[5], qs_idx[6]);
-    printf("  \"mean_plays\": %.4f, \"mean_draws\": %.4f, \"mean_reshuffles\": %.4f, \"mean_eliminations\": %.4f,\n",
-           T.sum_plays / N, T.sum_draws / N, T.sum_resh / N, T.sum_elims / N);
+    printf("  \"mean_plays\": %.4f, \"mean_draws\": %.4f, \"mean_reshuffles\": %.4f, \"mean_eliminations\": %.4f, \"mean_finishes\": %.4f,\n",
+           T.sum_plays / N, T.sum_draws / N, T.sum_resh / N, T.sum_elims / N, T.sum_fin / N);
     printf("  \"mean_max_stack\": %.4f, \"mean_max_hand\": %.4f, \"mean_zeros\": %.4f, \"mean_sevens\": %.4f, \"mean_roulettes\": %.4f, \"mean_dup_turns\": %.4f,\n",
            T.sum_maxstack / N, T.sum_maxhand / N, T.sum_zero / N, T.sum_seven / N, T.sum_roul / N, T.sum_dup / N);
     printf("  \"end_emptied_hand\": %lld, \"end_last_standing\": %lld, \"end_capped\": %lld, \"end_stuck_forever\": %lld, \"end_proven_cycle\": %lld, \"games_with_elimination\": %lld,\n",

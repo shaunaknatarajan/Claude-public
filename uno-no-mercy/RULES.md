@@ -123,3 +123,37 @@ Reverse Draw 4 with 2 players, count as separate turns. Skipped players do not g
 Note: the first cross-check (`crosscheck/`) was run before Roulette reveals were counted as
 turns. Both implementations used that older definition, so their comparison is valid. Results
 under the current definition are in `results/final/`; they are about 6% higher.
+
+## 7. House variant: play until one player is left (`-end_rule 1`)
+
+Many tables don't stop when the first player goes out. Players who empty their hand
+**finish** and leave the game, and play continues until only one player still holds cards. That
+player is the loser. The official Mercy rule can be kept (`-mercy 25`, variant A) or dropped
+(`-mercy 1000`, variant B, where finishing is the only way out). Everything in §1–§6 is
+unchanged except for the following.
+
+- **Finishing.** A player who plays their last card (including by Discard All) finishes at
+  once. Their seat is skipped from then on, like a knocked-out player's. They are not a 7-swap
+  target and are not part of the 0-pass chain.
+- **The game ends** when only one player is left in play. That can happen by finishing or by a
+  Mercy knockout. The first player to finish is recorded as the winner; if nobody finished,
+  the last player standing is.
+- **The finishing card still takes effect** (`-finish_effect 1`, the default), applied to the
+  players still in, starting from the finisher's seat:
+  - Draw cards add to the pending penalty, which passes to the next player in the direction
+    of play (after a Wild Reverse Draw 4, in the new direction). The two-player self-hit rule
+    of the Wild Reverse Draw 4 does not apply, because its player is no longer in the game.
+  - Skip skips the next player. Reverse reverses the direction; the turn passes to the next
+    player in the new direction.
+  - Skip Everyone would give the finisher another turn, so the turn passes to the next player.
+  - A wild's colour is named by the finisher. Wild Color Roulette hits the next player, who
+    names a colour and reveals cards as usual.
+  - A 0 makes the remaining players pass their hands on. A 7 does nothing, because the finisher
+    has no hand to swap.
+- **Alternative** (`-finish_effect 0`): the finishing card has no effect beyond setting the
+  colour. Any penalty that was already pending stays with the next player, unchanged. The turn
+  passes to the next player.
+- **Turns** are counted exactly as in §6.
+- **Deadlock without the Mercy rule.** In variant B the hands can hold every card but the top
+  one. Then a player who can neither play nor draw passes. If every remaining player passes
+  twice in a row with nothing changing, the game is stuck forever and counts as never ending.
