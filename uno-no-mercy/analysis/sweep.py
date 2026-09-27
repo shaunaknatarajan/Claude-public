@@ -9,6 +9,10 @@ import sys
 BIN, OUT = sys.argv[1], sys.argv[2]
 N = int(sys.argv[3]) if len(sys.argv) > 3 else 1_000_000
 
+# Variants that only change an option the greedy policy never exercises (it never declines a
+# playable card, always plays the card it drew and always stacks when it can) would reproduce
+# the default greedy row exactly, so they are run for random play only.
+RANDOM_ONLY = {"-voluntary_draw", "-after_draw 1", "-stack_mandatory"}
 VARIANTS = [
     ("default (official reading)", []),
     ("deck: rajatghate5 (38/colour, 16 wilds)", ["-deck", "1"]),
@@ -32,6 +36,9 @@ POLICIES = ["random", "greedy"]
 rows = []
 for name, flags in VARIANTS:
     for pol in POLICIES:
+        joined = " ".join(flags)
+        if pol == "greedy" and any(k in joined for k in RANDOM_ONLY):
+            continue
         # "may decline" is only exercised by a policy that sometimes declines
         polname = "randomv" if (pol == "random" and "-voluntary_draw" in flags) else pol
         for p in PLAYERS:

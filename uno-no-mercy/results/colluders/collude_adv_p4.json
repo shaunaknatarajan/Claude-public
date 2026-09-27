@@ -1,0 +1,15 @@
+{
+  "players": 4, "games": 200, "seed": 78, "deck": 0,
+  "policies": ["collude","collude","collude","collude"],
+  "rules": {"hand":7,"mercy":25,"mercy_immediate":1,"voluntary_draw":0,"after_draw":0,"stack_rule":0,"roulette_chooser":0,"elim_cards":2,"zero_seven":1,"reverse2p_skip":1,"wrd4_victim":0,"wrd4_2p_self":1,"stack_mandatory":0},
+  "mean_turns": 30.715000, "sd_turns": 11.208647, "sem_turns": 0.792571, "max_turns": 79,
+  "quantiles": {"p50":30,"p90":45,"p99":58,"p999":79,"p9999":79,"p99999":79,"p999999":79},
+  "mean_plays": 23.8000, "mean_draws": 79.2250, "mean_reshuffles": 0.0000, "mean_eliminations": 2.9750,
+  "mean_max_stack": 8.1200, "mean_max_hand": 25.0000, "mean_zeros": 1.2050, "mean_sevens": 1.5800, "mean_roulettes": 2.3150, "mean_dup_turns": 0.6550,
+  "end_emptied_hand": 3, "end_last_standing": 197, "end_capped": 0, "end_stuck_forever": 0, "end_proven_cycle": 0, "games_with_elimination": 200,
+  "elims_by_cause": {"draw_until_playable":131,"penalty":2,"roulette":462,"other":0},
+  "wins_by_seat": [62,40,56,42],
+  "wins_by_policy": {"random":0,"randomv":0,"greedy":0,"collude":200,"mcwin":0},
+  "overflow": 0, "overflow_values": [],
+  "hist": {"6":1,"7":1,"12":1,"13":3,"15":6,"16":7,"17":3,"18":7,"19":7,"20":7,"21":5,"22":5,"23":3,"24":5,"25":6,"26":9,"27":9,"28":7,"29":7,"30":7,"31":3,"32":10,"33":6,"34":6,"35":4,"36":6,"37":4,"38":5,"39":8,"40":5,"41":6,"42":1,"43":3,"44":4,"45":4,"46":4,"48":2,"49":1,"50":2,"51":3,"52":1,"53":2,"57":1,"58":1,"59":1,"79":1}
+}
