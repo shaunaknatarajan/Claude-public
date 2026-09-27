@@ -1,0 +1,1245 @@
+{
+ "task": "p2: two players, no Mercy rule (-mercy 1000), default rules otherwise (RULES.md sections 1-4, 7)",
+ "found": false,
+ "players": 2,
+ "end_rule": "both",
+ "end_rule_note": "With two players the game ends at the first exit under both endings (official: first empty hand wins; section 7: play until one player is left, which with two players is the same moment). One answer covers both.",
+ "verdict": "IMPOSSIBLE. No legal 2-player history reaches a forced endless loop. A forced loop here means a cycle of states in which no player ever has a decision with two or more options. The candidate loop (Red/Blue Reverse pair) is a genuine forced 2-cycle once it is on the table, but no legal history can reach it. The same holds for every other forced loop, including the Skip, Skip Everyone, 7-swap and 0-pass variants.",
+ "consequence": "For two players, the route used for 4-6 players (one explicit history into a forced loop, so P(never ends) > 0 and E[length] = infinity under random play) is closed. This result does not by itself prove P(never ends) = 0 for 2 players: a closed never-ending class that needs random choices or random reshuffles is not excluded by this argument. None has been seen either (0 proven cycles, 0 stuck, 0 capped games in all 2-player runs listed below).",
+ "rules_used": "Defaults of sim/nomercy.c (= RULES.md): must play if able (voluntary_draw 0), play the card that ends draw-until-playable (after_draw 0), Reverse = Skip with 2 players (reverse2p_skip 1), stacking any Draw Card of value >= the last one, colour irrelevant (stack_rule 0), 7 = swap and 0 = pass hands (zero_seven 1), Wild Reverse Draw 4 hits its own player with 2 players, a wild's colour and the Roulette colour are named by the player. Deck 0 (168 cards: 4 x Wild Draw 10, 8 x Roulette, 8 x Wild Reverse Draw 4, 4 x Wild Draw 6).",
+ "definitions": {
+  "decision": "Any point where the random policy has 2 or more options. These are: 2 or more distinct playable types on a free turn; any wild play (colour: 4 options); a Roulette victim naming the colour (4 options); facing a penalty while holding a stackable card (stack or accept); a 7-swap target with 3 or more players.",
+  "forced cycle": "A periodic sequence of states (hands, piles, top, colour, turn, direction, penalty) with no decision anywhere in it. Reshuffles of 2 or more cards are also excluded, as in the simulator's -detect_cycles, but the proof never needs this.",
+  "hand": "A multiset of cards, tracked as it moves between seats: a 7 swaps two hands and a 0 passes them on without mixing them."
+ },
+ "proof": [
+  "Step 1 (no wild is ever played in a forced cycle). Playing any wild needs a colour choice: the player names it, or, for a Roulette, the victim does. Both are 4-option decisions.",
+  "Step 2 (draws happen, so every loose card cycles through the hands). A cycle with plays but no draws would shrink a hand, so it could not repeat. A cycle with neither plays nor draws is two players both unable to play with nothing to draw. That is impossible: the 24 wilds cannot all be the single top card, so some hand holds a wild, and on its free turn the wild is playable. So there are draws in each period. The draw pile must then be refilled by a reshuffle in each period, so every card below the top gets drawn within a period. Each drawn card must leave that hand again for the state to repeat, so it is played later.",
+  "Step 3 (all 24 wilds stay in hands). A loose wild would be drawn (step 2) and then played, which contradicts step 1. The top card changes every period, so a wild cannot stay on top either.",
+  "Step 4 (one hand W holds every wild and never acts; the other hand H acts on every turn, always a free turn, and holds no wild). A hand holding a Wild Draw 10 can never act in the cycle. On a free turn the wild is playable (lemma L2), so the turn is a choice or a colour choice. Facing a penalty, the Wild Draw 10 can be stacked (L2), so stack-or-accept is a choice. If the 4 Wild Draw 10s were split between both hands, nobody could act. So one hand, W, holds all four and never acts, and H takes every turn. H is never under a penalty, because only H plays, and a Draw Card played by H hands the next turn to W. So H always has free turns. A wild held by H would then be an option (a choice, or a colour choice if it is the only option), so H holds no wild and W holds all 24.",
+  "Step 5 (the cycle's cards). Only H plays, and the next turn must again be H's on a free turn with W untouched. By lemma L3, the cards H plays in the cycle ('cycling types') are therefore all of kind Skip, Skip Everyone, Reverse, 0 or 7. The cards H holds but never plays ('junk types') are unplayable on every top that occurs in the cycle; otherwise H would face a choice. By lemma L1 (playability between coloured cards is symmetric), a junk type and a cycling type never share a colour or a kind.",
+  "Step 6 (W has no last change: contradiction). W starts as a 7-card hand and must end up with 24 or more cards, so it changes at least once. Let t* be its LAST change (a play or a draw). After t*, only H plays, W never draws, and every card outside W stays inside H, the draw pile, the discard pile or the top. So every card on top after t* ends up either as a junk type in H or as a cycling type. A wild on top would later be drawn by H, which steps 3-4 rule out. Consecutive tops T_i, T_{i+1} share a colour or a kind, because T_{i+1} is played on T_i on a free turn. The one exception is a stacking reply right after t*, when W's last change was playing a Draw Card: that reply is itself a Draw Card, not a cycling type, and W can then only accept with an empty pile, so the chain from it is all junk. A junk type is never adjacent to a cycling type (step 5), yet the tops are cycling types from the cycle's start onwards. So the top T0 right after t* is a cycling type, i.e. of kind Skip, Skip Everyone, Reverse, 0 or 7. Lemma L4 checks every possible last change of W. Accepting a penalty leaves a Draw Card on top. A Roulette reveal leaves a wild on top. A stacking play or a Discard All leaves a card whose kind is not in the list. Drawing until playable ends with a play. W playing a Skip, Skip Everyone or Reverse makes W move again. W playing a 7 or 0 passes W to the seat that moves next. In the last two cases W is on a free turn holding a playable wild, so it must play and change again, which contradicts 'last'. Hence no forced cycle is reachable. QED."
+ ],
+ "why_the_candidate_fails": "The candidate: A to move, top Red Reverse, only Blue Reverse loose, A holding only Yellow/Green non-Reverse cards, B holding everything else. Its only possible predecessor is a play of a Reverse onto the other Reverse. The top before that card becomes a loose card that A later draws, so it must be the other Reverse (a junk card would share nothing with a Reverse). Going back move by move, the first Reverse of the chain must have been played by B, the hand with the wilds, as its last change. With 2 players a Reverse acts as a Skip, so B moves again. B holds wilds, so it must play again. So B's hand never stops changing before the loop, and the loop is never entered. A 'junk flood' that absorbs extra loose cards into A's hand does not help: each extra loose card must be junk, and junk cannot sit next to a Reverse in the chain of tops.",
+ "candidate_loop_if_reached": {
+  "note": "The state and one period of each loop, verified forced for 1000 turns by analysis/witness_p2.py. Seat 0 = A (mover), seat 1 = B. These states are legal card distributions but are NOT reachable from a deal (see proof).",
+  "loops": [
+   {
+    "loop": "reverse pair (task candidate): Red Reverse / Blue Reverse",
+    "why_forced": "A plays the drawn Reverse; with 2 players it acts as a Skip, so A moves again",
+    "start": {
+     "cur": 0,
+     "dir": 1,
+     "top": "RRev",
+     "color": "R",
+     "stack": 0,
+     "pile": 0,
+     "disc": 1,
+     "hand_sizes": [
+      66,
+      100
+     ]
+    },
+    "mover_hand": [
+     "G0",
+     "G0",
+     "G1",
+     "G1",
+     "G2",
+     "G2",
+     "G3",
+     "G3",
+     "G4",
+     "G4",
+     "G5",
+     "G5",
+     "G6",
+     "G6",
+     "G7",
+     "G7",
+     "G8",
+     "G8",
+     "G9",
+     "G9",
+     "GD2",
+     "GD2",
+     "GD2",
+     "GD4",
+     "GD4",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GSkip",
+     "GSkip",
+     "GSkip",
+     "GSkipAll",
+     "GSkipAll",
+     "Y0",
+     "Y0",
+     "Y1",
+     "Y1",
+     "Y2",
+     "Y2",
+     "Y3",
+     "Y3",
+     "Y4",
+     "Y4",
+     "Y5",
+     "Y5",
+     "Y6",
+     "Y6",
+     "Y7",
+     "Y7",
+     "Y8",
+     "Y8",
+     "Y9",
+     "Y9",
+     "YD2",
+     "YD2",
+     "YD2",
+     "YD4",
+     "YD4",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YSkip",
+     "YSkip",
+     "YSkip",
+     "YSkipAll",
+     "YSkipAll"
+    ],
+    "forced_turns_checked": 1000,
+    "period": 2,
+    "one_period": [
+     {
+      "player": 0,
+      "action": "play",
+      "card": "BRev",
+      "drawn": [
+       "BRev"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": -1,
+       "top": "BRev",
+       "color": "B",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        66,
+        100
+       ]
+      }
+     },
+     {
+      "player": 0,
+      "action": "play",
+      "card": "RRev",
+      "drawn": [
+       "RRev"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "RRev",
+       "color": "R",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        66,
+        100
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "loop": "skip pair: Red Skip / Blue Skip",
+    "why_forced": "Skip with 2 players: A moves again",
+    "start": {
+     "cur": 0,
+     "dir": 1,
+     "top": "RSkip",
+     "color": "R",
+     "stack": 0,
+     "pile": 0,
+     "disc": 1,
+     "hand_sizes": [
+      66,
+      100
+     ]
+    },
+    "mover_hand": [
+     "G0",
+     "G0",
+     "G1",
+     "G1",
+     "G2",
+     "G2",
+     "G3",
+     "G3",
+     "G4",
+     "G4",
+     "G5",
+     "G5",
+     "G6",
+     "G6",
+     "G7",
+     "G7",
+     "G8",
+     "G8",
+     "G9",
+     "G9",
+     "GD2",
+     "GD2",
+     "GD2",
+     "GD4",
+     "GD4",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GRev",
+     "GRev",
+     "GRev",
+     "GSkipAll",
+     "GSkipAll",
+     "Y0",
+     "Y0",
+     "Y1",
+     "Y1",
+     "Y2",
+     "Y2",
+     "Y3",
+     "Y3",
+     "Y4",
+     "Y4",
+     "Y5",
+     "Y5",
+     "Y6",
+     "Y6",
+     "Y7",
+     "Y7",
+     "Y8",
+     "Y8",
+     "Y9",
+     "Y9",
+     "YD2",
+     "YD2",
+     "YD2",
+     "YD4",
+     "YD4",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YRev",
+     "YRev",
+     "YRev",
+     "YSkipAll",
+     "YSkipAll"
+    ],
+    "forced_turns_checked": 1000,
+    "period": 2,
+    "one_period": [
+     {
+      "player": 0,
+      "action": "play",
+      "card": "BSkip",
+      "drawn": [
+       "BSkip"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "BSkip",
+       "color": "B",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        66,
+        100
+       ]
+      }
+     },
+     {
+      "player": 0,
+      "action": "play",
+      "card": "RSkip",
+      "drawn": [
+       "RSkip"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "RSkip",
+       "color": "R",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        66,
+        100
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "loop": "skip-everyone pair: Red Skip Everyone / Blue Skip Everyone",
+    "why_forced": "Skip Everyone: A moves again",
+    "start": {
+     "cur": 0,
+     "dir": 1,
+     "top": "RSkipAll",
+     "color": "R",
+     "stack": 0,
+     "pile": 0,
+     "disc": 1,
+     "hand_sizes": [
+      68,
+      98
+     ]
+    },
+    "mover_hand": [
+     "G0",
+     "G0",
+     "G1",
+     "G1",
+     "G2",
+     "G2",
+     "G3",
+     "G3",
+     "G4",
+     "G4",
+     "G5",
+     "G5",
+     "G6",
+     "G6",
+     "G7",
+     "G7",
+     "G8",
+     "G8",
+     "G9",
+     "G9",
+     "GD2",
+     "GD2",
+     "GD2",
+     "GD4",
+     "GD4",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GRev",
+     "GRev",
+     "GRev",
+     "GSkip",
+     "GSkip",
+     "GSkip",
+     "Y0",
+     "Y0",
+     "Y1",
+     "Y1",
+     "Y2",
+     "Y2",
+     "Y3",
+     "Y3",
+     "Y4",
+     "Y4",
+     "Y5",
+     "Y5",
+     "Y6",
+     "Y6",
+     "Y7",
+     "Y7",
+     "Y8",
+     "Y8",
+     "Y9",
+     "Y9",
+     "YD2",
+     "YD2",
+     "YD2",
+     "YD4",
+     "YD4",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YRev",
+     "YRev",
+     "YRev",
+     "YSkip",
+     "YSkip",
+     "YSkip"
+    ],
+    "forced_turns_checked": 1000,
+    "period": 2,
+    "one_period": [
+     {
+      "player": 0,
+      "action": "play",
+      "card": "BSkipAll",
+      "drawn": [
+       "BSkipAll"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "BSkipAll",
+       "color": "B",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        68,
+        98
+       ]
+      }
+     },
+     {
+      "player": 0,
+      "action": "play",
+      "card": "RSkipAll",
+      "drawn": [
+       "RSkipAll"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "RSkipAll",
+       "color": "R",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        68,
+        98
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "loop": "7 pair: Red 7 / Blue 7 (hands swap every turn)",
+    "why_forced": "the 7 swaps the hands, so the small hand moves again from the other seat",
+    "start": {
+     "cur": 0,
+     "dir": 1,
+     "top": "R7",
+     "color": "R",
+     "stack": 0,
+     "pile": 0,
+     "disc": 1,
+     "hand_sizes": [
+      68,
+      98
+     ]
+    },
+    "mover_hand": [
+     "G0",
+     "G0",
+     "G1",
+     "G1",
+     "G2",
+     "G2",
+     "G3",
+     "G3",
+     "G4",
+     "G4",
+     "G5",
+     "G5",
+     "G6",
+     "G6",
+     "G8",
+     "G8",
+     "G9",
+     "G9",
+     "GD2",
+     "GD2",
+     "GD2",
+     "GD4",
+     "GD4",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GRev",
+     "GRev",
+     "GRev",
+     "GSkip",
+     "GSkip",
+     "GSkip",
+     "GSkipAll",
+     "GSkipAll",
+     "Y0",
+     "Y0",
+     "Y1",
+     "Y1",
+     "Y2",
+     "Y2",
+     "Y3",
+     "Y3",
+     "Y4",
+     "Y4",
+     "Y5",
+     "Y5",
+     "Y6",
+     "Y6",
+     "Y8",
+     "Y8",
+     "Y9",
+     "Y9",
+     "YD2",
+     "YD2",
+     "YD2",
+     "YD4",
+     "YD4",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YRev",
+     "YRev",
+     "YRev",
+     "YSkip",
+     "YSkip",
+     "YSkip",
+     "YSkipAll",
+     "YSkipAll"
+    ],
+    "forced_turns_checked": 1000,
+    "period": 2,
+    "one_period": [
+     {
+      "player": 0,
+      "action": "play",
+      "card": "B7",
+      "drawn": [
+       "B7"
+      ],
+      "state_after": {
+       "cur": 1,
+       "dir": 1,
+       "top": "B7",
+       "color": "B",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        98,
+        68
+       ]
+      }
+     },
+     {
+      "player": 1,
+      "action": "play",
+      "card": "R7",
+      "drawn": [
+       "R7"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "R7",
+       "color": "R",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        68,
+        98
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "loop": "0 pair: Red 0 / Blue 0 (hands pass every turn)",
+    "why_forced": "the 0 passes the hands, so the small hand moves again from the other seat",
+    "start": {
+     "cur": 0,
+     "dir": 1,
+     "top": "R0",
+     "color": "R",
+     "stack": 0,
+     "pile": 0,
+     "disc": 1,
+     "hand_sizes": [
+      68,
+      98
+     ]
+    },
+    "mover_hand": [
+     "G1",
+     "G1",
+     "G2",
+     "G2",
+     "G3",
+     "G3",
+     "G4",
+     "G4",
+     "G5",
+     "G5",
+     "G6",
+     "G6",
+     "G7",
+     "G7",
+     "G8",
+     "G8",
+     "G9",
+     "G9",
+     "GD2",
+     "GD2",
+     "GD2",
+     "GD4",
+     "GD4",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GDiscardAll",
+     "GRev",
+     "GRev",
+     "GRev",
+     "GSkip",
+     "GSkip",
+     "GSkip",
+     "GSkipAll",
+     "GSkipAll",
+     "Y1",
+     "Y1",
+     "Y2",
+     "Y2",
+     "Y3",
+     "Y3",
+     "Y4",
+     "Y4",
+     "Y5",
+     "Y5",
+     "Y6",
+     "Y6",
+     "Y7",
+     "Y7",
+     "Y8",
+     "Y8",
+     "Y9",
+     "Y9",
+     "YD2",
+     "YD2",
+     "YD2",
+     "YD4",
+     "YD4",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YDiscardAll",
+     "YRev",
+     "YRev",
+     "YRev",
+     "YSkip",
+     "YSkip",
+     "YSkip",
+     "YSkipAll",
+     "YSkipAll"
+    ],
+    "forced_turns_checked": 1000,
+    "period": 2,
+    "one_period": [
+     {
+      "player": 0,
+      "action": "play",
+      "card": "B0",
+      "drawn": [
+       "B0"
+      ],
+      "state_after": {
+       "cur": 1,
+       "dir": 1,
+       "top": "B0",
+       "color": "B",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        98,
+        68
+       ]
+      }
+     },
+     {
+      "player": 1,
+      "action": "play",
+      "card": "R0",
+      "drawn": [
+       "R0"
+      ],
+      "state_after": {
+       "cur": 0,
+       "dir": 1,
+       "top": "R0",
+       "color": "R",
+       "stack": 0,
+       "pile": 0,
+       "disc": 1,
+       "hand_sizes": [
+        68,
+        98
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "machine_checks": {
+  "script": "analysis/witness_p2.py",
+  "run": "python3 analysis/witness_p2.py [--sim <compiled sim/nomercy.c> --games N]",
+  "engine_vs_c_simulator": {
+   "file": "results/no_mercy/cycle_example.txt",
+   "players": 6,
+   "turns_replayed": 2,
+   "matches_c_simulator": true
+  },
+  "L1_symmetry": "checked all 64x64 ordered pairs of coloured types: symmetric",
+  "L2_wilds": "every wild is playable on every (top, colour); WD10 stacks on every penalty value 2/4/6/10",
+  "L3_same_hand_moves_again_on_free_turn_by_kind": {
+   "0": true,
+   "1": false,
+   "2": false,
+   "3": false,
+   "4": false,
+   "5": false,
+   "6": false,
+   "7": true,
+   "8": false,
+   "9": false,
+   "D2": false,
+   "D4": false,
+   "Skip": true,
+   "SkipAll": true,
+   "Rev": true,
+   "DiscardAll": false,
+   "WWRD4": false,
+   "WWD6": false,
+   "WWD10": false,
+   "WRoulette": false
+  },
+  "L4_last_change_of_wild_hand": [
+   {
+    "event": "W plays R0",
+    "top_after": "R0",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays R1",
+    "top_after": "R1",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R2",
+    "top_after": "R2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R3",
+    "top_after": "R3",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R4",
+    "top_after": "R4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R5",
+    "top_after": "R5",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R6",
+    "top_after": "R6",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R7",
+    "top_after": "R7",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays R8",
+    "top_after": "R8",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays R9",
+    "top_after": "R9",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays RD2",
+    "top_after": "RD2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays RD4",
+    "top_after": "RD4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays RSkip",
+    "top_after": "RSkip",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays RSkipAll",
+    "top_after": "RSkipAll",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays RRev",
+    "top_after": "RRev",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays RDiscardAll",
+    "top_after": "RDiscardAll",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y0",
+    "top_after": "Y0",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays Y1",
+    "top_after": "Y1",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y2",
+    "top_after": "Y2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y3",
+    "top_after": "Y3",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y4",
+    "top_after": "Y4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y5",
+    "top_after": "Y5",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y6",
+    "top_after": "Y6",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y7",
+    "top_after": "Y7",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays Y8",
+    "top_after": "Y8",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays Y9",
+    "top_after": "Y9",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays YD2",
+    "top_after": "YD2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays YD4",
+    "top_after": "YD4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays YSkip",
+    "top_after": "YSkip",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays YSkipAll",
+    "top_after": "YSkipAll",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays YRev",
+    "top_after": "YRev",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays YDiscardAll",
+    "top_after": "YDiscardAll",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G0",
+    "top_after": "G0",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays G1",
+    "top_after": "G1",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G2",
+    "top_after": "G2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G3",
+    "top_after": "G3",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G4",
+    "top_after": "G4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G5",
+    "top_after": "G5",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G6",
+    "top_after": "G6",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G7",
+    "top_after": "G7",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays G8",
+    "top_after": "G8",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays G9",
+    "top_after": "G9",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays GD2",
+    "top_after": "GD2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays GD4",
+    "top_after": "GD4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays GSkip",
+    "top_after": "GSkip",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays GSkipAll",
+    "top_after": "GSkipAll",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays GRev",
+    "top_after": "GRev",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays GDiscardAll",
+    "top_after": "GDiscardAll",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B0",
+    "top_after": "B0",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays B1",
+    "top_after": "B1",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B2",
+    "top_after": "B2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B3",
+    "top_after": "B3",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B4",
+    "top_after": "B4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B5",
+    "top_after": "B5",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B6",
+    "top_after": "B6",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B7",
+    "top_after": "B7",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays B8",
+    "top_after": "B8",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays B9",
+    "top_after": "B9",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays BD2",
+    "top_after": "BD2",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays BD4",
+    "top_after": "BD4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays BSkip",
+    "top_after": "BSkip",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays BSkipAll",
+    "top_after": "BSkipAll",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays BRev",
+    "top_after": "BRev",
+    "top_kind_is_go_again": true,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W plays BDiscardAll",
+    "top_after": "BDiscardAll",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays WWRD4",
+    "top_after": "WWRD4",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays WWD6",
+    "top_after": "WWD6",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays WWD10",
+    "top_after": "WWD10",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": false
+   },
+   {
+    "event": "W plays WRoulette",
+    "top_after": "WRoulette",
+    "top_kind_is_go_again": false,
+    "W_moves_next_on_free_turn": true
+   },
+   {
+    "event": "W stacks RD2",
+    "top_after": "RD2",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks RD4",
+    "top_after": "RD4",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks YD2",
+    "top_after": "YD2",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks YD4",
+    "top_after": "YD4",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks GD2",
+    "top_after": "GD2",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks GD4",
+    "top_after": "GD4",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks BD2",
+    "top_after": "BD2",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks BD4",
+    "top_after": "BD4",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks WWRD4",
+    "top_after": "WWRD4",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks WWD6",
+    "top_after": "WWD6",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W stacks WWD10",
+    "top_after": "WWD10",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W accepts a penalty",
+    "top_after": "a Draw Card (D2/D4/WRD4/WD6/WD10)",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W reveals as a Roulette victim",
+    "top_after": "WRoulette",
+    "top_kind_is_go_again": false
+   },
+   {
+    "event": "W draws until playable",
+    "top_after": "the card W then plays: see case (a)",
+    "top_kind_is_go_again": null
+   }
+  ]
+ },
+ "empirical_support_c_simulator": [
+  {
+   "cmd": "nomercy -p 2 -n 20000 -threads 1 -seed 2026 -mercy 1000 -detect_cycles 1 -cap 20000000 -policy random -adv_nature 1",
+   "mean_turns": 9457.57,
+   "max_turns": 105861,
+   "proven_cycles": 0,
+   "stuck": 0,
+   "capped": 0
+  },
+  {
+   "cmd": "nomercy -p 2 -n 20000 -threads 1 -seed 2026 -mercy 1000 -detect_cycles 1 -cap 20000000 -policy greedy",
+   "mean_turns": 345.3,
+   "max_turns": 4324,
+   "proven_cycles": 0,
+   "stuck": 0,
+   "capped": 0
+  },
+  {
+   "cmd": "nomercy -p 2 -n 5000 -threads 1 -seed 2026 -mercy 1000 -detect_cycles 1 -cap 20000000 -policy random -end_rule 1",
+   "mean_turns": 16133.55,
+   "max_turns": 146368,
+   "proven_cycles": 0,
+   "stuck": 0,
+   "capped": 0
+  },
+  {
+   "cmd": "nomercy -p 2 -n 10000 -threads 1 -seed 2026 -mercy 1000 -detect_cycles 1 -cap 20000000 -policy gremlin",
+   "mean_turns": 2108.13,
+   "max_turns": 24899,
+   "proven_cycles": 0,
+   "stuck": 0,
+   "capped": 0
+  },
+  {
+   "cmd": "earlier project run (results/no_mercy/nomercy2_random_p2.json): -p 2 -n 100000 -policy random -mercy 1000",
+   "proven_cycles": 0,
+   "stuck": 0,
+   "capped": 0
+  }
+ ],
+ "turns_to_loop": null
+}
