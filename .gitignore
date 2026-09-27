@@ -1,3 +1,4 @@
 uno-no-mercy/sim/nomercy
 uno-no-mercy/sim/*.o
 __pycache__/
+uno-no-mercy/results/**/*.log
