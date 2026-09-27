@@ -238,3 +238,19 @@ the C code does under its default flags.
 | p99 | 260 | 260 | +0 | 0.289 | +0.00 | ok |
 | p999 | 310 | 311 | +1 | 0.944 | +1.06 | ok |
 | max turns | 435 | 456 | +21 | 39 | +0.15 | ok (Gumbel; +15 expected for 2M vs 1M) |
+
+## Re-check under the current turn definition
+
+After the Roulette-victim turn was added to both implementations, the reference was re-run
+(`ref_results_v2.json`, 400,000 games per player count, seed 4096) and compared with the final
+C runs (`results/final/random_p*.json`, 20,000,000 games per player count).
+
+| Players | Reference mean turns | C mean turns | z | Went-out fraction z | p50 / p99 (ref vs C) |
+|---:|---:|---:|---:|---:|---|
+| 2 | 31.925 ± 0.037 | 31.902 ± 0.005 | +0.61 | −0.71 | 25/110 vs 25/110 |
+| 3 | 64.492 ± 0.053 | 64.507 ± 0.008 | −0.28 | +0.08 | 58/164 vs 58/164 |
+| 4 | 94.107 ± 0.069 | 94.251 ± 0.010 | −2.09 | +0.98 | 91/210 vs 91/209 |
+| 5 | 117.922 ± 0.080 | 117.980 ± 0.011 | −0.73 | +1.74 | 118/243 vs 118/242 |
+| 6 | 135.457 ± 0.091 | 135.472 ± 0.013 | −0.17 | +0.61 | 138/274 vs 138/274 |
+
+No discrepancy (10 tests, largest |z| = 2.09).
