@@ -143,9 +143,9 @@ personalities, grudges and goals, we had AI agents play complete games in charac
 decision at a time, with no turn cap. Each player saw only what a person at the table would see:
 their own hand, the top card, everyone's hand size, the last dozen table events, and their own
 private notes. They used the notes to track grudges and plans across turns. A small engine
-([humans/engine.py](humans/engine.py)) enforces the official rules and plays forced moves. Over
-20,000 random 4-player games it averages 94.4 ± 0.3 turns, against 94.25 for the main
-simulator. Every real choice went to a separate AI call playing that character, 433 choices
+([humans/engine.py](humans/engine.py)) enforces the official rules and plays forced moves. Under
+random play it averages 94.4 ± 0.3 turns over 20,000 4-player games, against 94.25 for the main
+simulator, and 31.95 ± 0.12 over 40,000 2-player games, against 31.90. Every real choice went to a separate AI call playing that character, 433 choices
 across the eight games.
 
 The seven personalities ([humans/personas.md](humans/personas.md)):
@@ -321,11 +321,12 @@ those of the games themselves, not of an average that includes infinity.)
 
 Once even one game in a strategy's distribution is provably endless, that strategy's mean is
 infinite. So **without the Mercy rule the mean game length of random play is infinite** from 4
-players up. Every loop we caught looks the same
+players up. Every loop we inspected has the same shape
 ([results/no_mercy/cycle_example.txt](results/no_mercy/cycle_example.txt)). All 168 cards except
-two are in hands, and the two loose cards are Reverses. Two neighbours can play nothing from their
-hands. Each in turn draws the only card available, a "reshuffle" of a single card, is forced to
-play it, and reverses play back to the other, forever.
+two are in hands, and the two loose cards are a matching pair: two Reverses or two Skips. Two
+players can play nothing from their hands. Each in turn draws the only card available, a
+"reshuffle" of a single card, is forced to play it, and the Reverse or Skip hands the turn
+straight back to the other player, forever.
 
 With the Mercy rule, at least 23 cards are always outside the hands, so every loop must pass
 through a genuinely random reshuffle, and the Roulette argument in §5 applies.
