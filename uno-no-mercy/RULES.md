@@ -39,9 +39,14 @@ but it is the most-cited one:
 | **Total** | | **168** |
 
 There is no plain Wild and no plain Wild Draw 4. The official scoring section's list of "Wild
-Action Card[s]" names only the four wild types above. Other breakdowns in circulation, such as
-the one on open-mercy.com, add 4 plain Wilds and one 0 per color. They are treated as
-sensitivity variants, not as the default.
+Action Card[s]" names only the four wild types above. Two other 168-card breakdowns circulate
+and are simulated as sensitivity variants (`-deck`):
+
+| `-deck` | Source | Per color | Wilds |
+|---|---|---|---|
+| `0` (default) | fan wiki; unit-tested by ayushrudani/no-mercy-uno | 36: as in the table above | 8 WRD4, 4 WD6, 4 WD10, 8 Roulette |
+| `1` | rajatghate5/no-mercy | 38: 3 colored Draw 4 and 3 Skip Everyone | 4 of each wild type |
+| `2` | open-mercy.com | 37: one 0; 3 of every colored action | 4 of each wild type, plus 4 plain Wilds |
 
 Draw values used for stacking: Draw 2 = 2, Draw 4 = 4, Wild Reverse Draw 4 = 4, Wild Draw 6 =
 6, Wild Draw 10 = 10. Wild Color Roulette is **not** a Draw Card.
@@ -63,8 +68,9 @@ Draw values used for stacking: Draw 2 = 2, Draw 4 = 4, Wild Reverse Draw 4 = 4, 
    lose your turn. Stacking is optional (flag `-stack_mandatory 1`).
 2. **Otherwise:** you may play one card that matches the top card by color, number or symbol,
    or any wild. Official: "If you HAVE a matching card in your hand, you may PLAY IT."
-   - Default (strict): you must play if you can. Flag `-voluntary_draw 1` lets you decline and
-     draw instead.
+   - Default (strict): you must play if you can. Flag `-voluntary_draw 1` lets you decline; you
+     then draw until playable and must play that card, exactly as if you had had no playable
+     card.
    - If you have no playable card: "you MUST draw cards from the Draw Pile UNTIL YOU DRAW A
      CARD YOU CAN PLAY. Then, play that card." This is `-after_draw 0`. Flags `1` (may keep
      it) and `2` (keep it, turn ends) are alternatives.
@@ -102,13 +108,18 @@ Draw values used for stacking: Draw 2 = 2, Draw 4 = 4, Wild Reverse Draw 4 = 4, 
   draw pile.
 
 **Derived fact (no deadlock).** With at most 6 players, every active hand holds at most 24
-cards. So at least 168 − 5·24 − h = 48 − h cards are outside the other hands. Any
+cards. So at least 168 − 5·24 − h − 1 = 47 − h cards are in the draw pile, discard pile (below
+its top card) and set-aside pile, which is more than the 25 − h a knockout needs. Any
 draw-until-playable, penalty or roulette sequence therefore always reaches a playable card, the
 target color or a knockout. The draw and discard piles can never both run dry mid-sequence.
 
 ## 6. What a "turn" is (for game-length statistics)
 
 A turn is every time the turn marker lands on a player and that player acts: they play,
-accept a penalty, or draw until playable. The extra turn from Skip Everyone, and the "go again"
-from Skip or Reverse with 2 players, count as separate turns. Skipped players do not get a
-turn.
+accept a penalty, draw until playable, or (as a Wild Color Roulette victim) name a color and
+reveal cards. The extra turn from Skip Everyone, and the "go again" from Skip, Reverse or Wild
+Reverse Draw 4 with 2 players, count as separate turns. Skipped players do not get a turn.
+
+Note: the first cross-check (`crosscheck/`) was run before Roulette reveals were counted as
+turns. Both implementations used that older definition, so their comparison is valid. Results
+under the current definition are in `results/final/`; they are about 6% higher.
