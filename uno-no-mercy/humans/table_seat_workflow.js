@@ -61,7 +61,7 @@ You play ONLY through these commands (run each exactly, with Bash; give WAIT a B
   WAIT:  python3 ${TABLE} wait --game ${G} --player ${me} --seen <SEEN> --seen-chat <SEEN_CHAT> --timeout 280
          The first line is JSON with "reason" and the new "seen"/"seen_chat" values to use in your next WAIT. Below it is what ${me} can see: your hand, the table, what happened since you last looked, new table talk, your private notes, and (on your turn) your numbered options.
          reason = your_turn | new_events | timeout | game_over | time_up | you_finished
-         Off your turn, WAIT only wakes you for big moments (a big penalty or Roulette, a hand swap or pass, someone down to one card or finishing, you getting hit, someone speaking to you by name, or the table catching someone cheating); small plays pile up and you see them next time.
+         Off your turn, WAIT only wakes you for moments your character would care about (things that hit you, someone speaking to you by name, and whatever your personality watches for); everything else piles up and you see it next time.
   ACT:   python3 ${TABLE} act --game ${G} --player ${me} --choice <number> [--say "<something to the table>"]
   SAY:   python3 ${TABLE} say --game ${G} --player ${me} --text "<something to the table>"
   NOTE:  python3 ${TABLE} note --game ${G} --player ${me} --text "<private note to your future self: plans, grudges, deals made>"

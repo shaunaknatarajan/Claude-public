@@ -187,10 +187,48 @@ def big_moment(line, me):
     return False
 
 
+def involved(line, me):
+    """This player is directly affected: hit by a penalty, skipped, swapped with, Roulette victim, or a hand pass."""
+    if "passes their hand" in line:
+        return True
+    return me in line and ("faces a penalty" in line or "is skipped" in line or "swaps hands with" in line
+                           or re.search(rf"{re.escape(me)} names \w+ and reveals", line) is not None)
+
+
+def near_finish(line):
+    return "finishes" in line or re.search(r"\(1 left\)", line) is not None
+
+
+def buried(line, big=10):
+    m = re.search(r"draws the penalty of (\d+)", line) or re.search(r"reveals (\d+) card", line)
+    return m is not None and int(m.group(1)) >= big
+
+
+# Who reacts off-turn to what, by personality (everyone always reacts when spoken to by name).
+PERSONA_WAKE = {
+    "Tyler": lambda l, me: big_moment(l, me),                                # the Gremlin loves any drama
+    "Maya": lambda l, me: involved(l, me) or near_finish(l),                  # the Shark: the race, and hits on her
+    "Priya": lambda l, me: involved(l, me) or buried(l),                      # the Grudge Holder: hits on her, and payback
+    "Sam": lambda l, me: involved(l, me) or buried(l),                        # the Peacekeeper: someone getting buried
+    "Leo": lambda l, me: involved(l, me),                                     # the Engineer: only what touches him
+    "Joe": lambda l, me: involved(l, me),                                     # Grandpa: only what touches him
+    "Vic": lambda l, me: involved(l, me),                                     # the Peeper: hits on him (and accusations)
+}
+NEVER_ENDING = lambda l, me: involved(l, me) or near_finish(l)                # noqa: E731  someone might end it!
+LOUD_TALKERS = {"Tyler", "Vic"}  # also react to the table catching a cheater even when not named
+
+
+def wakes(me, line):
+    f = PERSONA_WAKE.get(me) or (NEVER_ENDING if me.startswith("Z") else big_moment)
+    return f(line, me)
+
+
 def big_talk(chat_rows, me):
     """Table talk worth waking for: someone speaks to this player, or the table catches the peeper."""
     for c in chat_rows:
-        if c["player"] == "TABLE" or (c["player"] != me and re.search(rf"\b{re.escape(me)}\b", c["text"], re.I)):
+        if c["player"] != me and re.search(rf"\b{re.escape(me)}\b", c["text"], re.I):
+            return True
+        if c["player"] == "TABLE" and me in LOUD_TALKERS:
             return True
     return False
 
@@ -277,7 +315,7 @@ def cmd_wait(a):
         mine = g.decision is not None and g.decision["player"] == p
         new_lines = g.log[seen_log:]
         new_chat = [c for c in read_jsonl(path(a.game, "chat.jsonl")) if c["i"] >= seen_chat]
-        wake = mine or any(big_moment(e, a.player) for e in new_lines) or big_talk(new_chat, a.player)
+        wake = mine or any(wakes(a.player, e) for e in new_lines) or big_talk(new_chat, a.player)
         if wake:
             text, next_chat = seat_view(a.game, g, p, seen_log, seen_chat)
             if mine:
