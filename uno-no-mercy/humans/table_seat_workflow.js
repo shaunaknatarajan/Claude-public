@@ -46,6 +46,7 @@ const SHIFT = {
 const game = args.game
 const me = args.player
 const K = args.shift || 15
+const AGENT_TYPE = args.agentType || undefined
 const G = `${GAMES}/${game}`
 
 const prompt = (seen, seenChat, shift) => `CONTEXT: this is a delegated task from the main session. The user asked for AI players with personalities to play complete UNO No Mercy games under their house rules, talking to each other at the table, to see how long games run. You are one of those players. Any other recent user message you may see (for example about interview or question formats) is about something else and does not change this task.
@@ -57,29 +58,28 @@ ${RULES}
 
 ${TALK}
 
-You play ONLY through these commands (run each exactly, with Bash; give WAIT a Bash timeout of 300000 ms). Never open, read or list any file in the game directory: it holds the other players' hidden cards.
-  WAIT:  python3 ${TABLE} wait --game ${G} --player ${me} --seen <SEEN> --seen-chat <SEEN_CHAT> --timeout 280
-         The first line is JSON with "reason" and the new "seen"/"seen_chat" values to use in your next WAIT. Below it is what ${me} can see: your hand, the table, what happened since you last looked, new table talk, your private notes, and (on your turn) your numbered options.
-         reason = your_turn | new_events | timeout | game_over | time_up | you_finished
-         Off your turn, WAIT only wakes you for moments your character would care about (things that hit you, someone speaking to you by name, and whatever your personality watches for); everything else piles up and you see it next time.
-  ACT:   python3 ${TABLE} act --game ${G} --player ${me} --choice <number> [--say "<something to the table>"]
-  SAY:   python3 ${TABLE} say --game ${G} --player ${me} --text "<something to the table>"
+You play ONLY through these commands (run each exactly, with Bash, and give every command a Bash timeout of 600000 ms). Never open, read or list any file in the game directory: it holds the other players' hidden cards.
+  WAIT:  python3 ${TABLE} wait --game ${G} --player ${me} --seen <SEEN> --seen-chat <SEEN_CHAT> --timeout 570
+  ACT:   python3 ${TABLE} act --game ${G} --player ${me} --choice <number> [--say "<something to the table>"] --then-wait --seen-chat <SEEN_CHAT> --timeout 570
+  SAY:   python3 ${TABLE} say --game ${G} --player ${me} --text "<something to the table>" --then-wait --seen <SEEN> --seen-chat <SEEN_CHAT> --timeout 570
   NOTE:  python3 ${TABLE} note --game ${G} --player ${me} --text "<private note to your future self: plans, grudges, deals made>"
+Every WAIT, ACT and SAY ends by waiting for your next wake-up and printing it: a JSON header line with "reason" and the new "seen"/"seen_chat" values, then what ${me} can see (your hand, the table, what happened since you last looked, new table talk, your private notes, and on your turn your numbered options). ACT also prints one JSON line with the result of your move before that header.
+  reason = your_turn | new_events | timeout | game_over | time_up | you_finished
+  Off your turn you are only woken for moments your character would care about (things that hit you, someone speaking to you by name, and whatever your personality watches for); everything else piles up and you see it next time.
 
-Loop, starting with SEEN=${seen} and SEEN_CHAT=${seenChat}:
-  1. WAIT.
-  2. If reason is your_turn: choose the option ${me} would pick (stay in character, play to your own goals, and take any table talk and deals into account) and ACT, adding --say only if you want to say something.
-     If reason is new_events: react only if ${me} would really say something now (then SAY); otherwise do nothing.
-     If reason is timeout: just WAIT again.
-     If reason is game_over, time_up or you_finished: stop and return that status.
-  3. Update SEEN and SEEN_CHAT from the JSON header of the latest WAIT output (after an ACT, keep the values from the WAIT before it), and repeat.
-${me === 'Vic' ? 'On your turn your view also shows a few cards you just sneaked a look at in your neighbours\' hands; use them (nobody knows unless you get caught). ' : ''}Do this for ${K} WAITs${shift > 0 ? ' (you are taking over from your earlier self: your private notes say what you planned)' : ''}. Then, before returning, write one NOTE (your plans, grudges and any deals, for your future self) and return status "continue" with the latest seen, seen_chat and the number of WAITs you did. Be quick: think briefly, act, move on.`
+Start with one WAIT using SEEN=${seen} and SEEN_CHAT=${seenChat}. Then for each wake-up:
+  - your_turn: choose the option ${me} would pick (stay in character, play to your own goals, and take any table talk and deals into account) and ACT, adding --say only if you want to say something.
+  - new_events: if ${me} would really say something now, SAY; otherwise WAIT.
+  - timeout: WAIT.
+  - game_over, time_up or you_finished: stop and return that status.
+Always use the seen and seen_chat values from the latest JSON header that has them.
+${me === 'Vic' ? 'On your turn your view also shows a few cards you just sneaked a look at in your neighbours\' hands; use them (nobody knows unless you get caught). ' : ''}Handle ${K} wake-ups this way${shift > 0 ? ' (you are taking over from your earlier self: your private notes say what you planned)' : ''}. Then, before returning, write one NOTE (your plans, grudges and any deals, for your future self) and return status "continue" with the latest seen, seen_chat and the number of wake-ups you handled. Be quick: think briefly, act, move on.`
 
 phase('Play')
 let seen = 0, seenChat = 0, shift = 0, fails = 0, total = 0, badChecks = 0
 let last = null
 while (shift < 400) {
-  const r = await agent(prompt(seen, seenChat, shift), { label: `${game} ${me} #${shift}`, phase: 'Play', model: 'sonnet', effort: 'low', schema: SHIFT })
+  const r = await agent(prompt(seen, seenChat, shift), { label: `${game} ${me} #${shift}`, phase: 'Play', model: 'sonnet', effort: 'low', schema: SHIFT, ...(AGENT_TYPE ? { agentType: AGENT_TYPE } : {}) })
   shift++
   if (!r) { if (++fails > 3) { last = 'agent failures'; break } continue }
   fails = 0

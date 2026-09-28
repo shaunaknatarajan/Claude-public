@@ -294,8 +294,14 @@ def cmd_new(a):
 
 
 def cmd_wait(a):
-    deadline = time.time() + a.timeout
-    seen_log, seen_chat = a.seen, a.seen_chat
+    wait_loop(a.game, a.player, a.seen, a.seen_chat, a.timeout)
+
+
+def wait_loop(game, player, seen_log, seen_chat, timeout):
+    """Block until this player has something to do (their decision, or a moment they would react to)."""
+    from types import SimpleNamespace
+    a = SimpleNamespace(game=game, player=player)
+    deadline = time.time() + timeout
     while True:
         g = engine.load(a.game)
         p = seat_of(g, a.player)
@@ -378,7 +384,11 @@ def cmd_act(a):
         engine.save(g, a.game)
         record_repeat(a.game, g)
         s = g.status()
+        seen_after = len(g.log)
     print(json.dumps(s))
+    if a.then_wait:
+        sys.stdout.flush()
+        wait_loop(a.game, a.player, seen_after, a.seen_chat, a.timeout)
 
 
 def say(gdir, g, who, text):
@@ -396,6 +406,9 @@ def cmd_say(a):
             return
         say(a.game, g, a.player, a.text)
     print(json.dumps({"ok": True}))
+    if a.then_wait:
+        sys.stdout.flush()
+        wait_loop(a.game, a.player, a.seen, a.seen_chat, a.timeout)
 
 
 def cmd_note(a):
@@ -431,8 +444,13 @@ def main():
     a = sub.add_parser("act"); a.add_argument("--game", required=True); a.add_argument("--player", required=True)
     a.add_argument("--choice", type=int, required=True); a.add_argument("--say", default="")
     a.add_argument("--note", default="")
+    a.add_argument("--then-wait", action="store_true", help="after acting, WAIT (prints the next wake-up)")
+    a.add_argument("--seen-chat", type=int, default=0); a.add_argument("--timeout", type=float, default=100)
     a = sub.add_parser("say"); a.add_argument("--game", required=True); a.add_argument("--player", required=True)
     a.add_argument("--text", required=True)
+    a.add_argument("--then-wait", action="store_true", help="after speaking, WAIT (prints the next wake-up)")
+    a.add_argument("--seen", type=int, default=0); a.add_argument("--seen-chat", type=int, default=0)
+    a.add_argument("--timeout", type=float, default=100)
     a = sub.add_parser("note"); a.add_argument("--game", required=True); a.add_argument("--player", required=True)
     a.add_argument("--text", required=True)
     a = sub.add_parser("status"); a.add_argument("--game", required=True)
